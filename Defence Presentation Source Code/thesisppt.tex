@@ -1,0 +1,1007 @@
+\documentclass{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage{default}
+\usepackage{graphicx}
+\graphicspath{{./images/}}
+\usepackage{xmpmulti}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{algorithm}
+\usepackage{subfigure}
+\usepackage{algorithmic}
+\usepackage{multirow}
+\usepackage{tikz}
+\usepackage{xspace}
+
+\usetheme{Warsaw}
+
+\title[K-Resilient Nash Equilibria in Reachability Games]{K-Resilient Nash Equilibria in Multi-Player Concurrent Reachability Games}
+
+\author[Mohammed Rizwan Rawani, rizwan@cse.iitk.ac.in]{Mohammed Rizwan Rawani (11111030) \\rizwan@cse.iitk.ac.in\\Advisor: Prof. Anil Seth}
+
+\institute{Department of Computer Science and Engineering \\Indian Institute of Technology Kanpur}
+\date{June 20, 2014}
+%\date{\today}
+\newcommand{\comment}[1]{}
+\newcommand\Fontvi{\fontsize{7}{5}\selectfont}
+\newcommand\Fontci{\fontsize{4}{4}\selectfont}
+\newcommand\Fontti{\fontsize{25}{15}\selectfont}
+\newcommand{\ms}{MSCS\xspace}
+\newcommand{\ts}{TSSS\xspace}
+\newcommand{\ls}{LMCS\xspace}
+\newcommand{\figwidth}{0.99\textwidth}
+\newcommand{\figscale}{0.18}
+\usepackage[font=scriptsize,format=plain,labelfont=bf,up,textfont=it,up]{caption}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Outline}
+\tableofcontents[shaded]
+\end{frame}
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+\section[Introduction]{Introduction}
+\begin{frame}
+ \frametitle{Introduction}
+\begin{itemize}
+	\item In today's world, we are surrounded by complex systems.
+	\item We use automated devices for many tasks in our daily life.
+	\item In many cases, failure to ensure the correct functioning of these devices can lead to heavy losses.
+	\item An ATM machine working incorrectly can cause heavy financial loss.
+	\item Incorrect functioning of the flight control systems installed in an aeroplane can put a risk on the lives of people aboard.
+	\item Therefore, it is very important to ensure that a system functions correctly and has the desired properties.
+	\item While system testing prior to usage can help find and resolve errors, it cannot ensure that the system is error free.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Introduction}
+\begin{itemize}
+	\item To ensure that the system is free of design errors, formal specification and verification techniques come in play.
+	\item Formal specification and verification techniques work by mathematically modelling the system and its specification and then mathematically verifying that the system model has the desired properties.
+	\item There are many approaches to formal specification and verification.
+	\item One such approach is to use game theoretic concepts.
+	\item Systems that involve multiple agents interacting with each other can be modelled as multi-player games.
+	\item Game theoretic solution concepts can then be used to study the properties of such systems.
+\end{itemize}
+\end{frame}
+
+\subsection*{Games, Strategies and Equilibria}
+\begin{frame}
+ \frametitle{Games, Strategies and Equilibria}
+\begin{itemize}
+	\item A game consists of a finite number of players.
+	\item Every player has a set of strategies to choose from. Players play from among the strategies available to them.
+	\item A strategy profile is a combination of strategies, one for each player.
+	\item A strategy profile decides the complete outcome of the game.
+	\item For every outcome of the game, each player has an associated payoff.
+	\item Players are rational and play to maximize their respective payoffs.
+	\item Players may also be allowed to play mixed (randomized) strategies. In such cases, expected values of payoffs are used to characterize the game.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Games, Strategies and Equilibria}
+\begin{itemize}
+	\item A game can be represented using a matrix which lists the payoff vectors for every possible combination of pure strategies of players.
+	\item Such a representation is called normal form representation.
+\begin{table}[h]
+\centering
+\caption{Rock-Paper-Scissors game in normal form.}
+\label{table:rps}
+\begin{tabular}{c c c c}
+\hline\noalign{\smallskip}
+         & Rock   & Paper  & Scissors \\ \noalign{\smallskip}\hline\noalign{\smallskip}
+Rock     & 0 , 0  & -1 , 1 & 1 , -1   \\
+Paper    & 1 , -1 & 0 , 0  & -1 , 1   \\
+Scissors & -1 , 1 & 1 , -1 & 0 , 0    \\ \noalign{\smallskip}\hline
+\end{tabular}
+\end{table}
+	\item Table \ref{table:rps} shows the normal form representation of a two player rock-paper-scissors game.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Games, Strategies and Equilibria}
+\begin{itemize}
+	\item Normal form representation of games is pretty exhaustive and is often inconvenient.
+	\item If the number of players and available strategies is large, normal form representation is practically not possible.
+	\item Various other succinct representations have been proposed.
+	\item Games played on graphs is one such representation.
+	\item In this representation, a system is modelled as a state transition diagram.
+	\item The states represent various configurations of the system.
+	\item These games may be turn-based games or concurrent games.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Games, Strategies and Equilibria}
+\begin{itemize}
+	\item In turn-based games, in each state, only one player decides the next state.
+	\item In concurrent games, in each state, every player chooses an action from a set of allowed actions. The combination of actions (one for each player) then determines the next state.
+	\item The payoffs of the players are defined with respect to the runs (paths) in this graph.
+	\item Players may have qualitative objectives (0-1 objectives) like reachability objectives, safety objectives, B{\"u}chi objectives etc.
+	\item Players may also have quantitative objectives where a real valued payoff is associated to each run.
+	\item This may be done by defining for each player, a preference ordering on the runs of the graph.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Games, Strategies and Equilibria}
+\begin{itemize}
+	\item A strategy for a player is a mapping that associates every finite path in the graph to an action available to the player in the last state of that path.
+	\item A strategy profile is a tuple of strategies, one for each player.
+	\item A strategy profile determines the complete outcome of the game.
+	\item A Nash equilibrium is a strategy profile such that no player has a benefit on unilaterally deviating from its strategy.
+	\item If mixed strategies are allowed, every game has at least one Nash equilibrium \cite{12}.
+	\item In the rock-paper-scissors game shown in Table \ref{table:rps}, there is a mixed strategy Nash equilibrium when both the players randomize uniformly between the three pure strategies available to them.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Games, Strategies and Equilibria}
+\begin{itemize}
+	\item A \textit{k-resilient} Nash equilibrium is a strategy profile such that, if at most \textit{k} players deviate from their respective strategies, none of the deviating player can benefit.
+	\item Such a strategy profile is \textit{resilient} to deviations by upto at most \textit{k} players \cite{Abraham-2006,Abraham-2008}.
+	\item Thus, a Nash equilibrium is actually a \textit{1-resilient} Nash equilibrium.
+	\item A \textit{k-resilient} Nash equilibrium may not exist in general \cite{Abraham-2006,Abraham-2008}.
+\end{itemize}
+\end{frame}
+
+
+\subsection*{Our Contribution}
+\begin{frame}
+\frametitle{Our Contribution}
+  \begin{itemize}
+	\item We study non-deterministic multi-player concurrent reachability games as defined in \cite{BBM-concur10,BBM-report}.
+ 	\item We prove some properties that characterize \textit{k-resilient} Nash equilibria in these games when only pure strategies are allowed.
+ 	\item We then use these properties to develop algorithms for checking existence of \textit{k-resilient} Nash equilibrium in finite non-deterministic multi-player concurrent reachability games in untimed and timed settings when only pure strategies are allowed.
+ 	\item Our algorithms are in 2-EXPTIME.
+ 	\item The properties that we prove also contain all the necessary information to compute a \textit{k-resilient} Nash equilibrium if it exists.
+  \end{itemize}
+\end{frame}
+
+\subsection*{Motivation}
+\begin{frame}
+\frametitle{Motivation}
+  \begin{itemize}
+	\item A Nash equilibrium is susceptible to deviations by more than one player.
+	\item Players can form coalitions and deviate in order to increase their payoffs.
+ 	\item This may disturb the stability of the system.
+ 	\item Therefore, it makes sense to study solution concepts that are resistant to deviations by coalitions of players also. 
+ 	\item One might assume that a coalition will deviate only if all the members of the coalition have some incentive and some equilibrium concepts have been proposed considering only such deviations \cite{Aumann-59,Bernheim-1987,Moreno-1996}.
+  	\item A \textit{k-resilient} Nash equilibrium is an even stronger notion as it also considers deviations where even only one player of the coalition can benefit.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Motivation}
+  \begin{itemize}
+	\item Abraham et al. \cite{Abraham-2006} discuss several reasons to consider such deviations.
+	\item There may be situations where only one player effectively controls the coalition.
+ 	\item This can happen in a network if a player can hijack nodes in the network.
+ 	\item A player may threaten other players or persuade them to deviate by promising side payments. 
+ 	\item This notion can also take care of situations where players make arbitrary moves.
+  	\item Abraham et al. \cite{Abraham-2006,Abraham-2008} consider that there would be some kind of communication among the deviating coalition.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Motivation}
+  \begin{itemize}
+	\item We claim that deviations by multiple players are possible even without any prior communication.
+	\item In real world situations, players might exhibit risk taking behaviour.
+ 	\item In a Nash equilibrium, if a player is not happy with his payoff, he might want to take a risk by deviating in the hope that some other player(s) would also deviate (reasoning similarly), and hence he may be benefited.
+ 	\item While taking such risks, he might take into account his loss if any, in case no one else deviates and his deviation is unilateral.
+ 	\item He may be ready to bear this loss considering his dissatisfaction with his current payoff and the benefits he may gain if the risk turns out in his favour.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Motivation}
+  \begin{itemize}
+ 	\item In case of a weak Nash equilibrium, a player may take such risks without the fear of any loss in case no one else deviates and his deviation is unilateral.
+ 	\item In games with qualitative objectives such as reachability games, a player can have the payoff of either 0 or 1.
+ 	\item In such games, if a player has a payoff of 0 in the Nash equilibrium selected, he may like to deviate and take a risk because he has nothing to lose.
+ 	\item Thus, the risk taking ability can be a threat to the stability of the system.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Motivation}
+  \begin{itemize}
+ 	\item Now consider a strategy profile which is a \textit{k-resilient} Nash equilibrium.
+ 	\item In this case, if a player takes such a risk, it would be required that more than \textit{k} players deviate for the risk to turn out in his favour.
+ 	\item Higher the value of \textit{k}, lower are the chances that the risk turns out in his favour.
+ 	\item Therefore higher the resilience, lower is the risk taking ability of the players and hence more stable is the system.
+  \end{itemize}
+\end{frame}
+
+\subsection*{Related Work}
+\begin{frame}
+\frametitle{Related Work}
+  \begin{itemize}
+	\item Games played on graphs have been extensively used in formal specification and verification techniques.
+ 	\item Henzinger \cite{9} reviews some important work in this area.
+ 	\item There has also been a lot of work on Nash equilibria and other related solution concepts (like subgame-perfect equilibria and secure equilibria) in turn-based multi-player games.
+ 	\item Gr{\"a}del and Ummels \cite{Ummels-2008} present a very nice survey of the work in this area.
+  	\item An important result is that every deterministic turn-based game with Borel winning conditions has a pure strategy Nash equilibrium \cite{6}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Related Work}
+  \begin{itemize}
+	\item Recently, there has been a focus on multi-player concurrent games.
+ 	\item The existence problem of Nash equilibrium in finite non-deterministic multi-player concurrent reachability games is NP-complete \cite{BBM-concur10,BBM-report,Romain-phd}.
+ 	\item The existence of Nash equilibrium is decidable in polynomial time for concurrent games with B{\"u}chi objectives \cite{BBMU-fsttcs11,Romain-phd}.
+ 	\item For timed games with reachability objectives, existence problem of Nash equilibrium is EXPTIME-complete \cite{BBM-concur10,BBM-report,Romain-phd}.
+  	\item Similar results exist for games with safety objectives, co-B{\"u}chi objectives, Rabin objectives and parity objectives \cite{Romain-phd}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Related Work}
+  \begin{itemize}
+	\item Various solution concepts have been proposed to take care of deviations by more than one player.
+ 	\item Halpern \cite{Halpern-2008,Halpern-2011} gives a brief review of these solution concepts.
+ 	\item In \cite{Aumann-59}, a concept of strong equilibrium is proposed which is a strategy profile such that no coalition of players can deviate in such a way that all its members benefit.
+  	\item In \cite{Bernheim-1987}, coalition-proof Nash equilibrium is proposed which is a strategy profile such that no coalition has a self enforcing deviation.
+  	\item A self enforcing deviation is a deviation by a coalition such that all its members benefit from the deviation and no subset of this coalition has a further self enforcing deviation possible.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Related Work}
+  \begin{itemize}
+	\item According to the definitions, every strong equilibrium is also a coalition-proof Nash equilibrium.
+ 	\item In \cite{Moreno-1996}, coalition-proof correlated equilibrium is studied which is similar to coalition-proof Nash equilibrium but considers correlated strategies.
+ 	\item All these solution concepts consider only those deviations where all the members of the deviating coalition can benefit from the deviation.
+  	\item However, recently Abraham et al. \cite{Abraham-2006,Abraham-2008} proposed the solution concept of \textit{k-resilient} Nash equilibrium which also considers the deviations in which even one member of the coalition can benefit.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Related Work}
+  \begin{itemize}
+    \item The reasons to consider such deviations as given in \cite{Abraham-2006} have been discussed earlier.
+    \item Abraham et al. \cite{Abraham-2006,Abraham-2008} prove that \textit{k-resilient} Nash equilibria exist in rational secret sharing and multi-party computation games with mediators, with some bounds on the values of \textit{k} and \textit{n} (total number of players).
+  	\item They also give various bounds and conditions on when can the mediator be simulated using cheap talk.
+  	\item In all these works, some kind of prior communication among the coalition is assumed before the deviation.
+  	\item However, we feel that deviation by multiple players is also possible without any prior communication due to the risk taking behaviour of players as explained earlier.
+  \end{itemize}
+\end{frame}
+
+\section[Multi-Player Concurrent Reachability Games]{Multi-Player Concurrent Reachability Games}
+\subsection*{Preliminaries}
+\begin{frame}
+\frametitle{Preliminaries}
+\begin{definition}[Transition System]
+A transition system $S$ is defined as a 2-tuple, $S = (States, Edg)$ where:
+\begin{itemize}
+\item $States$ is a possibly uncountable set of states.
+\item $Edg \subseteq States \times States$ is the set of transitions (edges).
+\end{itemize}
+\end{definition}
+\begin{itemize}
+\item A finite transition system is a transition system in which the set of states ($States$) is finite.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Preliminaries}
+\begin{itemize}
+\item A path $\pi$ in $S$, is a non-empty sequence $(s_{i})_{0\leq i<n}$ (where $n \in \mathbb{N} \cup \lbrace +\infty \rbrace$) of states of $S$ such that $(s_{i}, s_{i+1}) \in Edg$ for every $i < n-1$.
+\item The length of a path $\pi = (s_{i})_{0\leq i<n}$ is denoted by $\vert \pi \vert$. $\vert \pi \vert = n-1$.
+\item The set of finite paths (or \textit{histories}) of $S$ is denoted by $Hist_{S}$.
+\item The set of infinite paths (or \textit{plays}) of $S$ is denoted by $Play_{S}$.
+\item The set of all the paths of $S$ is denoted by $Path_{S}$. $Path_{S} = Hist_{S} \cup Play_{S}$.
+\item Given a path $\pi = (s_{i})_{0\leq i<n}$ and an integer $j < n$, the $j^{th}$ prefix of $\pi$ (denoted by $\pi_{\leq j}$) is the finite path $(s_{i})_{0\leq i<j+1}$.
+\item If a path $\pi$ is a history (a finite path), the last state of $\pi$ is denoted by $last(\pi)$. $last(\pi) = s_{\vert \pi \vert}$.    
+\end{itemize}
+\end{frame}
+
+\subsection*{Multi-Player Concurrent Reachability Games}
+\begin{frame}
+\frametitle{Multi-Player Concurrent Reachability Games}
+\begin{definition}[Multi-Player Concurrent Reachability Game]
+A non-deterministic multi-player concurrent reachability game $G$ is defined as a 7-tuple, $G = (States, Edg, Agt, Act, Mov, Tab, \Omega)$.
+\end{definition}
+\begin{itemize}
+\item $(States, Edg)$ is a transition system.
+\item $Agt$ is a finite set of players (agents).
+\item $Act$ is a possibly uncountable set of actions.
+\item $Mov: States \times Agt \rightarrow 2^{Act}\setminus \lbrace \emptyset \rbrace$ is a mapping that indicates the actions available to a given player in a given state.
+\item $Tab: States \times Act^{Agt} \rightarrow 2^{Edg}\setminus \lbrace \emptyset \rbrace$ is a mapping that associates a given tuple of actions of players in a given state to the resulting set of transitions. It is required that if $(s', s'') \in Tab(s, (m_{A})_{A\in Agt})$, then $s' = s$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Multi-Player Concurrent Reachability Games}
+\begin{itemize}
+\item $\Omega : Agt \rightarrow 2^{States}$ is a mapping that assigns to each agent, a set of states, which is the reachability objective of that agent (i.e., the agent wants to reach at least one of these states).
+\item In a game $G$, from some state $s$, each player $A$ selects one action $m_{A}$ from its set $Mov(s, A)$ of allowed actions.
+\item The tuple of actions $(m_{A})_{A\in Agt}$ thus formed is called a move and is written as $m_{Agt}$.
+\item This results in a set of transitions $Tab(s, (m_{A})_{A\in Agt})$ (or simply $Tab(s, m_{Agt})$).
+\item One of these transitions is applied (non-deterministically) which gives the next state of the game.
+\item In this way, the game continues to form a path $\pi$ in its underlying transition system.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Multi-Player Concurrent Reachability Games}
+\begin{itemize}
+\item We associate a payoff vector $v_{Agt} = (v_{A})_{A\in Agt}$ to every path $\pi$ in $G$.
+\item If a path $\pi$ visits $\Omega (A)$ then we let $v_{A}(\pi) = 1$, otherwise $v_{A}(\pi) = 0$ where $v_{A}(\pi)$ is the payoff received by player $A$, when the path $\pi$ is taken in $G$.
+\item As in \cite{BBM-concur10,BBM-report}, we use the notations $Hist_{G}$, $Play_{G}$ and $Path_{G}$ for the set of \textit{histories}, \textit{plays} and \textit{paths} respectively, in the underlying transition system of $G$.
+\item We also write $Hist_{G}(s)$, $Play_{G}(s)$ and $Path_{G}(s)$ for respective subsets of \textit{histories}, \textit{plays} and \textit{paths} starting in state $s$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Multi-Player Concurrent Reachability Games}
+\begin{definition}[Strategy]
+In a game $G$, a strategy for a player $A \in Agt$ is a mapping $\sigma_{A}: Hist_{G} \rightarrow Act$ such that for every $\pi \in Hist_{G}$, $\sigma_{A}(\pi) \in Mov(last(\pi), A)$.
+\end{definition}
+\begin{itemize}
+\item Given a subset of agents (also called a \textit{coalition}) $P \subseteq Agt$, a strategy $\sigma_{P}$ for the coalition $P$ is a tuple of strategies, one for each player in $P$ ($\sigma_{P} = (\sigma_{A})_{A\in P}$).
+\end{itemize}
+\begin{definition}[Strategy Profile]
+In a game $G$, a strategy profile $\sigma_{Agt}$ is a tuple of strategies, one for each player in $Agt$ (i.e., a strategy profile is a strategy for the coalition $Agt$). $\sigma_{Agt} = (\sigma_{A})_{A\in Agt}$.
+\end{definition}
+\end{frame}
+
+\begin{frame}
+\frametitle{Multi-Player Concurrent Reachability Games}
+\begin{itemize}
+\item With respect to the sets of strategies, following notations are used in this thesis:
+\begin{itemize}
+\item $Strat^{A}_{G}$: Set of all strategies for a player $A \in Agt$ in a game $G$.
+\item $Strat^{P}_{G}$: Set of all strategies for a coalition $P \subseteq Agt$ in a game $G$.
+\item $Strat^{Agt}_{G}$: Set of all strategy profiles in a game $G$.
+\end{itemize}
+\item We only consider pure strategies in this thesis.
+\item In a game $G$, for a coalition $P$ and a strategy $\sigma_{P}$ (for $P$), a path $\pi = (s_{i})_{0\leq i\leq \vert \pi \vert}$ is said to be compatible with the strategy $\sigma_{P}$, if, for every $j \leq \vert \pi \vert - 1$, there is a move $m_{Agt} = (m_{A})_{A\in Agt}$ such that:
+\begin{itemize}
+\item $m_{A} \in Mov(s_{j}, A)$ for every $A \in Agt$.
+\item $m_{A} = \sigma_{A}(\pi_{\leq j})$ for every $A \in P$.
+\item $(s_{j}, s_{j+1}) \in Tab(s_{j}, m_{Agt})$ 
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Multi-Player Concurrent Reachability Games}
+\begin{itemize}
+\item In a game $G$, the paths that are compatible with a strategy $\sigma_{P}$ (of a coalition $P$) are also called \textit{outcomes} of the strategy $\sigma_{P}$.
+\item We use the notation $Out_{G}(\sigma_{P})$ to denote the set of outcomes of strategy $\sigma_{P}$.
+\item The set of finite outcomes of strategy $\sigma_{P}$ is denoted by $Out_{G}^{f}(\sigma_{P})$.
+\item The set of infinite outcomes of strategy $\sigma_{P}$ is denoted by $Out_{G}^{\infty}(\sigma_{P})$.
+\item $Out_{G}(\sigma_{P}) = Out_{G}^{f}(\sigma_{P}) \cup Out_{G}^{\infty}(\sigma_{P})$.
+\item We write $Out_{G}(s, \sigma_{P})$, $Out_{G}^{f}(s, \sigma_{P})$ and $Out_{G}^{\infty}(s, \sigma_{P})$ for the respective sets of outcomes, finite outcomes and infinite outcomes of strategy $\sigma_{P}$ starting in state $s$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Multi-Player Concurrent Reachability Games}
+\begin{itemize}
+\item In a game $G$, given a move $m_{Agt}$ and an action $m'_{B}$ for some player $B$, we write $m_{Agt}[B \rightarrow m'_{B}]$ for the move $n_{Agt}$ with $n_{A} = m_{A}$ when $A \neq B$ and $n_{B} = m'_{B}$.
+\item In a game $G$, given a move $m_{Agt}$ and an action tuple $m'_{P}$ for a coalition $P$ ($m'_{P} = (m'_{A})_{A\in P}$), we write $m_{Agt}[P \rightarrow m'_{P}]$ for the move $n_{Agt}$ with $n_{A} = m_{A}$ for every $A \notin P$ and $n_{A} = m'_{A}$ for every $A \in P$.
+\item In a game $G$, given a strategy profile $\alpha_{Agt} \in Strat^{Agt}_{G}$ and a strategy $\alpha'_{B}$ for some player $B$ ($\alpha'_{B} \in Strat^{B}_{G}$), we write $\alpha_{Agt}[B \rightarrow \alpha'_{B}]$ for the strategy profile $\beta_{Agt}$ with $\beta_{A} = \alpha_{A}$ when $A \neq B$ and $\beta_{B} = \alpha'_{B}$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Multi-Player Concurrent Reachability Games}
+\begin{itemize}
+\item In a game $G$, given a strategy profile $\alpha_{Agt} \in Strat^{Agt}_{G}$ and a strategy $\alpha'_{P}$ for a coalition $P$ ($\alpha'_{P} \in Strat^{P}_{G}$), we write $\alpha_{Agt}[P \rightarrow \alpha'_{P}]$ for the strategy profile $\beta_{Agt}$ with $\beta_{A} = \alpha_{A}$ for every $A \notin P$ and $\beta_{A} = \alpha'_{A}$ for every $A \in P$.
+\item In a game $G$, let $k$ be a non-negative integer such that $k \leq \vert Agt \vert$ ($k$ is a non-negative integer less than or equal to the number of players in $G$). We use the notation $2^{Agt}_{k}$ to denote the set of all subsets of $Agt$ of size at most $k$.
+\[2^{Agt}_{k} = \lbrace P \; \vert \; P \in 2^{Agt} \; and \; \vert P \vert \leq k \rbrace\] 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Multi-Player Concurrent Reachability Games}
+\begin{definition}[K-Resilient Pseudo-Nash Equilibrium]
+Given a non-deterministic concurrent reachability game $G$ and a state $s$ in $G$, a \textit{k-resilient} pseudo-Nash equilibrium (for some $k \leq \vert Agt \vert$) in $G$ from $s$ is a pair $(\sigma_{Agt}, \pi)$ where $\sigma_{Agt} \in Strat^{Agt}_{G}$ and $\pi \in Out_{G}(s, \sigma_{Agt})$, such that, for every $P \in 2^{Agt}_{k}$ and every $\sigma'_{P} \in Strat^{P}_{G}$, it holds:
+\[\forall \pi' \in Out_{G}(s, \sigma_{Agt}[P \rightarrow \sigma'_{P}]). \; \forall B \in P. \; v_{B}(\pi') \leq v_{B}(\pi)\]
+
+Such an outcome $\pi$ is called a \textit{k-optimal} play for the strategy profile $\sigma_{Agt}$.
+\end{definition}
+\end{frame}
+
+\begin{frame}
+\frametitle{Multi-Player Concurrent Reachability Games}
+\begin{itemize}
+\item The payoff vector of a \textit{k-resilient} pseudo-Nash equilibrium $(\sigma_{Agt}, \pi)$ is a tuple $(v_{A}(\pi))_{A \in Agt}$ where $v_{A}(\pi) = 1$ if $\pi$ visits $\Omega (A)$ and $v_{A}(\pi) = 0$ otherwise.
+\item In case of deterministic concurrent reachability games, there is only one outcome of a given strategy profile ($\pi$ is uniquely determined by $\sigma_{Agt}$) and hence \textit{k-resilient} pseudo-Nash equilibria coincide with real \textit{k-resilient} Nash equilibria as defined in \cite{Abraham-2006,Abraham-2008}: they are strategy profiles such that, if at most $k$ players deviate from their respective strategies, none of the deviating player can benefit.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Multi-Player Concurrent Reachability Games}
+\begin{itemize}
+\item In case of non-deterministic concurrent reachability games, a strategy profile $\sigma_{Agt}$ for a \textit{k-resilient} pseudo-Nash equilibrium may give rise to several outcomes.
+\item The choice of playing the \textit{k-optimal} play $\pi$ is then made cooperatively by all the players.
+\item Once a strategy profile is fixed, non-determinism is resolved by all the players by choosing one of the possible outcomes in such a way that if at most $k$ players deviate from their respective strategies or choice of outcome, none of the deviating player can benefit.
+\end{itemize}
+\end{frame}
+
+\subsection*{Characterizing K-Resilient Nash Equilibria}
+\begin{frame}
+\frametitle{Characterizing K-Resilient Nash Equilibria}
+\begin{definition}[K-Suspect Coalitions]
+In a game $G$, for some $k \leq \vert Agt \vert$, the set of \textit{k-suspect coalitions} for an edge $e = (s, s')$, given a move $m_{Agt}$ (denoted as $k-Susp_{G}(e, m_{Agt})$) is defined as the set:
+\begin{align*}
+k-Susp_{G}(e, m_{Agt}) &= \lbrace P \in 2^{Agt}_{k} \; \vert \; \forall B \in P. \; \exists m'_{B} \in Mov(s, B) \\
+&\qquad s.t. \; e \in Tab(s, m_{Agt}[P \rightarrow m'_{P}])\\
+& \text{where} \; m'_{P} = (m'_{B})_{B\in P} \; \text{is an action tuple for} \; P\rbrace
+\end{align*}
+\end{definition}
+\begin{itemize}
+\item For an edge $e = (s, s')$, given a move $m_{Agt}$, if $e \in Tab(s, m_{Agt})$ then $k-Susp_{G}(e, m_{Agt}) = 2^{Agt}_{k}$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Characterizing K-Resilient Nash Equilibria}
+\begin{definition}[K-Suspect Coalitions]
+In a game $G$, for some $k \leq \vert Agt \vert$, the set of \textit{k-suspect coalitions} for a finite path $\pi = (s_{i})_{i \leq \vert \pi \vert}$, given a strategy profile $\sigma_{Agt}$ (denoted as $k-Susp_{G}(\pi, \sigma_{Agt})$) is defined as the set:
+\begin{align*}
+k-Susp_{G}(\pi, \sigma_{Agt}) = \bigcap \limits_{i<\vert \pi \vert} k-Susp_{G}((s_{i}, s_{i+1}), (\sigma_{A}(\pi_{\leq i}))_{A\in Agt})
+\end{align*}
+\end{definition}
+\end{frame}
+
+\begin{frame}
+\frametitle{Characterizing K-Resilient Nash Equilibria}
+\begin{lemma}[1]
+In a game $G$, for some $k \leq \vert Agt \vert$, given $\sigma_{Agt} \in Strat^{Agt}_{G}$, $\pi \in Hist_{G}$ and a coalition $P$ of size at most $k$ ($P \in 2^{Agt}_{k}$), the following three propositions are equivalent:
+
+(a) $P \in k-Susp_{G}(\pi, \sigma_{Agt})$
+
+(b) $\exists \sigma'_{P} \in Strat^{P}_{G}. \; \pi \in Out_{G}^{f}(\sigma_{Agt}[P \rightarrow \sigma'_{P}])$
+
+(c) $\pi \in Out_{G}^{f}((\sigma_{A})_{A\in Agt\setminus P})$
+\end{lemma}
+\begin{itemize}
+\item For a finite path $\pi$, given a strategy profile $\sigma_{Agt}$, if $\pi \in Out_{G}^{f}(\sigma_{Agt})$ then $k-Susp_{G}(\pi, \sigma_{Agt}) = 2^{Agt}_{k}$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Characterizing K-Resilient Nash Equilibria}
+\begin{itemize}
+\item In a game $G$, for some $k \leq \vert Agt \vert$, consider the set of ordered pairs $(P, X)$ where $P \subseteq Agt$ is a coalition and $X \subseteq 2^{Agt}_{k}$.
+\item Let us define a partial ordering on the set of ordered pairs $(P, X)$ as follows:
+\[(P', X') \leq (P, X) \; \textit{iff} \; P' \subseteq P \; \textit{and} \; X' \subseteq X\]
+\item The relation `$\leq$' is trivially reflexive, transitive and anti-symmetric.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Characterizing K-Resilient Nash Equilibria}
+\begin{definition}[K-Repellor Set]
+In a game $G$, for some $k \leq \vert Agt \vert$, given $P \subseteq Agt$ and $X \subseteq 2^{Agt}_{k}$, the \textit{k-repellor set} of the ordered pair $(P, X)$ (denoted as $k-Rep_{G}(P, X)$) is defined inductively as follows: as the base case, we let $k-Rep_{G}(\emptyset, X) = States$ for every $X \subseteq 2^{Agt}_{k}$. Then assuming that $k-Rep_{G}(P', X')$ has been defined for every $(P', X') \lneq (P, X)$, we let $k-Rep_{G}(P, X)$ be the largest set satisfying the following two conditions:
+
+(a) $\forall B \in P. \; k-Rep_{G}(P, X) \cap \Omega(B) = \emptyset$
+
+(b) $\forall s \in k-Rep_{G}(P, X). \; \exists m_{Agt} \in Act^{Agt}. \; \forall s' \in States.$\\$ \qquad s' \in k-Rep_{G}(P', X')$
+
+where $X' = k-Susp_{G}((s, s'), m_{Agt}) \cap X$ and $P' = P \bigcap \left( \bigcup \limits_{W \in X'}W \right)$
+\end{definition}
+\end{frame}
+
+\begin{frame}
+\frametitle{Characterizing K-Resilient Nash Equilibria}
+\begin{itemize}
+\item Intuitively, in a game $G$, for some $k \leq \vert Agt \vert$, given $P \subseteq Agt$ and $X \subseteq 2^{Agt}_{k}$, $k-Rep_{G}(P, X)$ is the set of states from where players can cooperate to stay in $k-Rep_{G}(P, X)$, thus never satisfying the objectives of players in $P$, such that if any coalition $Q \in X$ deviates from its strategy and breaks the cooperation, it won't help fulfilling the objectives of players in $P \cap Q$
+\item Intuitively, in $k-Rep_{G}(P, X)$, $P$ is the set of players whose objectives must not be fulfilled by deviations from coalitions in $X$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Characterizing K-Resilient Nash Equilibria}
+\begin{lemma}[2]
+In a game $G$, for some $k \leq \vert Agt \vert$, given $P, Q \subseteq Agt$ and $X, Y \subseteq 2^{Agt}_{k}$. If $Q \subseteq P$ and $Y \subseteq X$, then $k-Rep_{G}(P, X) \subseteq k-Rep_{G}(Q, Y)$.
+\end{lemma}
+\textit{Proof (Sketch).} This lemma can be easily proved by induction on the ordered pair $(P, X)$.
+\end{frame}
+
+\begin{frame}
+\frametitle{Characterizing K-Resilient Nash Equilibria}
+\begin{definition}[K-Secure Move]
+In a game $G$, for some $k \leq \vert Agt \vert$, given $P \subseteq Agt$, $X \subseteq 2^{Agt}_{k}$ and a state $s$, the set of \textit{k-secure moves} for the tuple $(s, P, X)$ (denoted as $k-Secure_{G}(s, P, X)$) is defined as:
+
+$k-Secure_{G}(s, P, X) = \bigg\lbrace m_{Agt} \in Act^{Agt} \; \bigg\vert \; \forall s' \in States.$\\$s' \in k-Rep_{G}(P', X')$ where $X' = k-Susp_{G}((s, s'), m_{Agt}) \cap X$ and $P' = P \bigcap \left( \bigcup \limits_{W \in X'}W \right)\bigg\rbrace$
+\end{definition}
+\begin{itemize}
+\item Intuitively, $k-Secure_{G}(s, P, X)$ is the set of moves available from state $s \in k-Rep_{G}(P, X)$ for staying in $k-Rep_{G}(P, X)$ (hence the word \textit{k-secure}).
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Characterizing K-Resilient Nash Equilibria}
+\textit{\textbf{A special case:}} 
+\begin{itemize}
+\item In a game $G$, for some $k \leq \vert Agt \vert$, given $P \subseteq Agt$, $X \subseteq 2^{Agt}_{k}$ and a state $s$. Consider the case $P \bigcap \left( \bigcup \limits_{W \in X}W \right) \neq P$ (i.e., there is at least one player in $P$ which is not a member of any coalition in $X$).
+\item In this case playing a \textit{k-secure move} from $k-Rep_{G}(P, X)$ may take us outside $k-Rep_{G}(P, X)$.
+\item This may happen as follows: if a \textit{k-secure move} $m_{Agt} \in k-Secure_{G}(s, P, X)$ is played and a transition $(s, s')$ is applied as a result, then according to condition (b) of definition of k-repellor sets:\\ $s' \in k-Rep_{G}(P', X')$
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Characterizing K-Resilient Nash Equilibria}
+\begin{itemize}
+\item where $X' = k-Susp_{G}((s, s'), m_{Agt}) \cap X = 2^{Agt}_{k} \cap X = X$.
+\item and $P' = P \bigcap \left( \bigcup \limits_{W \in X'}W \right) = P \bigcap \left( \bigcup \limits_{W \in X}W \right) \neq P$ ($P' \subsetneq P$).
+\item Therefore, $s' \in k-Rep_{G}(P', X)$ but $s'$ is not necessarily in $k-Rep_{G}(P, X)$. From Lemma 2, we have $k-Rep_{G}(P, X) \subseteq k-Rep_{G}(P', X)$.
+\item Thus, taking a \textit{k-secure move} from $k-Rep_{G}(P, X)$ in such cases does not necessarily mean staying in $k-Rep_{G}(P, X)$.
+\item Although, this seems to violate our intuitive meaning of \textit{k-secure moves}, this is not something undesirable. Its just a special case.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Characterizing K-Resilient Nash Equilibria}
+\begin{itemize}
+\item This special case does not affect our results because, in this thesis, we will only be considering the cases where $P \bigcap \left( \bigcup \limits_{W \in X}W \right) = P$ (i.e., every player in $P$ is a member of at least one coalition in $X$).
+\item In such cases taking a \textit{k-secure move} from $k-Rep_{G}(P, X)$ results in staying in $k-Rep_{G}(P, X)$ as expected according to the intuitive meaning of \textit{k-secure moves}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Characterizing K-Resilient Nash Equilibria}
+\begin{definition}[Transition System $K-S_{G}(P, X)$]
+In a game $G$, for some $k \leq \vert Agt \vert$, given $P \subseteq Agt$ and $X \subseteq 2^{Agt}_{k}$, we define the transition system $k-S_{G}(P, X) = (States, Edg')$ as follows: $(s, s') \in Edg'$ iff there exists some move $m_{Agt} \in k-Secure_{G}(s, P, X)$ such that $(s, s') \in Tab(s, m_{Agt})$. Note in particular that every $s \in k-Rep_{G}(P, X)$ has an outgoing transition in $k-S_{G}(P, X)$.
+\end{definition}
+\end{frame}
+
+\begin{frame}
+\frametitle{Characterizing K-Resilient Nash Equilibria}
+\begin{lemma}[3]
+In a game $G$, for some $k \leq \vert Agt \vert$, given $s \in States$, $P \subseteq Agt$ and $X \subseteq 2^{Agt}_{k}$ such that $P \bigcap \left( \bigcup \limits_{W \in X}W \right) = P$. Then $s \in k-Rep_{G}(P, X)$ if and only if there exists an infinite path $\pi$ in $k-S_{G}(P, X)$ starting from $s$.
+\end{lemma}
+\textit{Proof (Sketch).}\\($\Rightarrow$) Starting from $s \in k-Rep_{G}(P, X)$, we can play \textit{k-secure moves} to always stay in $k-Rep_{G}(P, X)$ thus forming an infinite path in $k-S_{G}(P, X)$.\\
+($\Leftarrow$) If $\pi$ is an infinite path in $k-S_{G}(P, X)$ then every state of $\pi$ is in $k-Rep_{G}(P, X)$. In particular $s \in k-Rep_{G}(P, X)$.
+\end{frame}
+
+\begin{frame}
+\frametitle{Characterizing K-Resilient Nash Equilibria}
+\begin{lemma}[4]
+In a game $G$, for some $k \leq \vert Agt \vert$, given $s \in States$, $P \subseteq Agt$ and $X \subseteq 2^{Agt}_{k}$ such that $P \bigcap \left( \bigcup \limits_{W \in X}W \right) = P$. Let $\pi \in Play_{G}(s)$ be an infinite play with initial state $s$. Then $\pi$ is a path in $k-S_{G}(P, X)$ if and only if there exists $\sigma_{Agt} \in Strat^{Agt}_{G}$ such that $\pi \in Out_{G}(s, \sigma_{Agt})$ and for every $Q \in X$ and every $\sigma'_{Q} \in Strat^{Q}_{G}$, it holds that:
+
+$\forall \pi' \in Out_{G}(s, \sigma_{Agt}[Q \rightarrow \sigma'_{Q}]). \; \pi'$ does not visit $\Omega(B)$ for every $B \in P \cap Q$.
+\end{lemma}
+\textit{Proof (Sketch).} ($\Rightarrow$) 
+\begin{itemize}
+\item Assume that $\pi = (s_{i})_{i\geq 0}$ is an infinite play in $k-S_{G}(P, X)$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Characterizing K-Resilient Nash Equilibria}
+\begin{itemize}
+\item Let us define the following partial functions:
+\begin{itemize}
+\item $c: States \times 2^{Agt} \times 2^{2^{Agt}_{k}} \rightarrow Act^{Agt}$: for every tuple $(s, R, Y)$ such that $s \in k-Rep_{G}(R, Y)$, we let $c(s, R, Y) = m_{Agt}$ for some move $m_{Agt} \in k-Secure_{G}(s, R, Y)$.
+\item $d: \mathbb{N} \rightarrow Act^{Agt}$: for every $i \in \mathbb{N}$, we let $d(i) = m_{Agt}$ for some move $m_{Agt} \in k-Secure_{G}(s_{i}, P, X)$ such that $(s_{i}, s_{i+1}) \in Tab(s_{i}, m_{Agt})$. This is well defined because $\pi$ is a play in $k-S_{G}(P, X)$.
+\end{itemize}
+\item The strategy profile $\sigma_{Agt}$ is defined as follows:
+\begin{itemize}
+\item On prefixes of $\pi$, we let $(\sigma_{A}(\pi_{\leq i}))_{A\in Agt} = d(i)$ for every $i \in \mathbb{N}$.
+\item For any $\pi' = (s'_{i})_{i\leq \vert \pi' \vert}$ that is not a prefix of $\pi$, we let $(\sigma_{A}(\pi'))_{A\in Agt} = c(s'_{\vert \pi' \vert}, P', X')$ where $X' = k-Susp_{G}(\pi', \sigma_{Agt}) \cap X$ and $P' = P \bigcap \left( \bigcup \limits_{W \in X'}W \right)$.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Characterizing K-Resilient Nash Equilibria}
+\begin{itemize}
+\item By construction, we have $\pi \in Out_{G}(s, \sigma_{Agt})$.
+\item Let $Q \in X$ and let $\sigma'_{Q} \in Strat^{Q}_{G}$.
+\item Let $\pi' \in Out_{G}(s, \sigma_{Agt}[Q \rightarrow \sigma'_{Q}])$.
+\item Assuming $\pi' = (s'_{i})_{i\geq 0}$, it can be shown by induction on $i$ that $s'_{i} \in k-Rep_{G}(P \cap Q, \lbrace Q \rbrace)$ for every $i \in \mathbb{N}$.
+\item Hence $\pi'$ does not visit $\Omega(B)$ for every $B \in P \cap Q$.
+\end{itemize}
+($\Leftarrow$) This direction can be easily proved by induction on the ordered pair $(P, X)$.
+\end{frame}
+
+\begin{frame}
+\frametitle{Characterizing K-Resilient Nash Equilibria}
+\begin{theorem}[5]
+Let $G$ be a non-deterministic multi-player concurrent reachability game and let $s \in States$. There is a \textit{k-resilient} pseudo-Nash equilibrium in $G$ from $s$ with a payoff vector $v_{Agt} = (v_{A})_{A\in Agt}$ if and only if, letting $P = \lbrace A \in Agt \; \vert \; v_{A} = 0 \rbrace$, there is an infinite path $\pi$ in $k-S_{G}(P, 2^{Agt}_{k})$ which starts in $s$ and visits $\Omega(A)$ for every $A \notin P$. Furthermore, $\pi$ is the k-optimal play for this \textit{k-resilient} pseudo-Nash equilibrium.
+\end{theorem}
+\textit{Proof (Sketch)}. Both the directions of this theorem can be easily proved using Lemma 4 and the definition of \textit{k-resilient} pseudo-Nash equilibrium.
+\end{frame}
+
+\begin{frame}
+\frametitle{Characterizing K-Resilient Nash Equilibria}
+\begin{theorem}[6]
+In a game $G$, if $\pi$ is an infinite path in $k-S_{G}(P, 2^{Agt}_{k})$ from a state $s$ visiting $\Omega(A)$ for every $A \notin P$, then there is a \textit{k-resilient} pseudo-Nash equilibrium $(\sigma_{Agt}, \pi)$ where the strategy profile $\sigma_{Agt}$ consists in playing \textit{k-secure moves} in the transition system $k-S_{G}(P \cap P', 2^{Agt}_{k} \cap X')$ for some $P' \subseteq Agt$ and $X' \subseteq 2^{Agt}_{k}$ satisfying the condition $(P \cap P') \bigcap \left( \bigcup \limits_{W \in 2^{Agt}_{k} \cap X'}W \right) = (P \cap P')$.
+\end{theorem}
+\end{frame}
+
+\begin{frame}
+\frametitle{Characterizing K-Resilient Nash Equilibria}
+\textit{Proof (Sketch).}
+\begin{itemize}
+\item The strategy profile $\sigma_{Agt}$ should contain $\pi$ as one of its outcomes. This can be done by selecting relevant \textit{k-secure moves} from $k-S_{G}(P, 2^{Agt}_{k})$.
+\item For a history that is out of $\pi$ but still in $k-Rep_{G}(P, 2^{Agt}_{k})$, $\sigma_{Agt}$ is defined to select \textit{k-secure moves} to stay in $k-Rep_{G}(P, 2^{Agt}_{k})$.
+\item For a history $\pi'$ out of $k-Rep_{G}(P, 2^{Agt}_{k})$, we compute $X' = X \cap k-Susp_{G}(\pi', \sigma_{Agt})$ and $P' = P \bigcap \left( \bigcup \limits_{W \in X'}W \right)$ and the strategy profile $\sigma_{Agt}$ is defined to select \textit{k-secure moves} in $k-S_{G}(P \cap P', 2^{Agt}_{k} \cap X')$.
+\end{itemize}
+\end{frame}
+
+\subsection*{Application to Finite Games}
+\begin{frame}
+\frametitle{Application to Finite Games}
+  \begin{itemize}
+	\item A finite non-deterministic multi-player concurrent reachability game is a game in which the underlying transition system ($(States, Edg)$) is finite and the set of actions ($Act$) is also finite.
+ 	\item Given a finite game $G$, a state $s$ in $G$ and a positive integer $k \leq \vert Agt \vert$, we can apply Theorem 5 to develop an algorithm for checking existence of a \textit{k-resilient} pseudo-Nash equilibrium in the game $G$ from state $s$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Application to Finite Games}
+\begin{algorithm}[H]
+\scriptsize
+\caption{Existence of a \textit{k-resilient} pseudo-Nash equilibrium}
+\begin{algorithmic}[1]
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\REQUIRE A finite non-deterministic multi-player concurrent reachability game $G$, a state $s$ in $G$ and a positive integer $k \leq \vert Agt \vert$.
+\ENSURE A boolean value: \TRUE $\;$if there exists a \textit{k-resilient} pseudo-Nash equilibrium in $G$ from $s$; \FALSE $\;$otherwise.
+\FOR{every possible payoff vector $v_{Agt} = (v_{A})_{A\in Agt}$}
+\STATE $P \leftarrow \lbrace A \in Agt \; \vert \; v_{A} = 0 \rbrace$
+\STATE Compute $k-Rep_{G}(P, 2^{Agt}_{k})$
+\STATE Construct $k-S_{G}(P, 2^{Agt}_{k})$
+\FOR{every play $\pi$ in $k-S_{G}(P, 2^{Agt}_{k})$ starting from $s$}
+\IF{$\pi$ visits $\Omega(A)$ for every $A \notin P$}
+\RETURN \TRUE
+\ENDIF
+\ENDFOR
+\ENDFOR
+\RETURN \FALSE
+\end{algorithmic}
+\end{algorithm}
+\end{frame}
+
+\begin{frame}
+\frametitle{Application to Finite Games}
+  \begin{itemize}
+	\item The correctness of Algorithm 1 follows from Theorem 5.
+ 	\item Algorithm 1 runs in time exponential with respect to the number of states and size of transition table but doubly exponential time with respect to the number of agents.
+ 	\item Overall, Algorithm 1 runs in time doubly exponential with respect to the size of input.
+ 	\item Algorithm 1 is in 2-EXPTIME.
+ 	\item In case a \textit{k-resilient} pseudo-Nash equilibrium exists in a game, it can be computed using the generic method given in Theorem 6.
+  \end{itemize}
+\end{frame}
+
+\section[Timed Concurrent Reachability Games]{Timed Concurrent Reachability Games}
+\subsection*{Timed Games}
+\begin{frame}
+\frametitle{Timed Games}
+  \begin{itemize}
+	\item For formal specification and verification of real time systems that involve timing constraints (such as flight control systems installed in an aeroplane), we need to include the timing constraints while modelling the system specification.
+ 	\item If a system desires some properties that include timing constraints, we should be able to include the concept of `time' in the system specification.
+ 	\item In order to verify that the system has such desired properties (that include timing constraints), the system model must be able to capture such properties completely in its specification. 
+ 	\item For this purpose, Alur and Dill \cite{1} define a concept of timed automata.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Timed Games}
+  \begin{itemize}
+	\item Timed automata are a natural extension of finite automata in the sense that transitions in timed automata not just read a symbol (over an alphabet) but also take into account the `time' at which a symbol is read.
+ 	\item If a symbol represents an event, then transitions in timed automata depend not only on the occurrence of an event, but also on the time of occurrence of an event.
+ 	\item Thus, timed automata are able to capture properties that involve timing constraints and hence are useful in formal specification and verification of real time systems. 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Timed Games}
+  \begin{itemize}
+ 	\item Timed games are defined in a way similar to timed automata, but include necessary game theoretic concepts.
+ 	\item Real time systems that involve multiple agents interacting with each other can be modelled as multi-player timed games. 
+ 	\item Game theoretic solution concepts can then be used to study the properties of such systems.
+ 	\item In this thesis, we are interested in multi-player timed concurrent reachability games as defined in \cite{BBM-concur10,BBM-report}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Timed Games}
+\begin{definition}[Clock Valuation]
+Consider a finite set of clocks $\chi$. A valuation $v$ over the finite set of clocks $\chi$ is an application $v: \chi \rightarrow \mathbb{R}_{+}$ that assigns to each clock $x \in \chi$, a positive real number that signifies the units of time since the clock $x$ was last reset.
+\end{definition}
+  \begin{itemize}
+ 	\item If $v$ is a valuation over the set of clocks $\chi$ and $t \in \mathbb{R}_{+}$, then $v + t$ is the valuation that assigns to each $x \in \chi$, the value $v(x) + t$.
+ 	\item If $v$ is a valuation over the set of clocks $\chi$ and $\varphi \subseteq \chi$, then $[\varphi \leftarrow 0]v$ is the valuation that assigns the value $0$ to each $y \in \varphi$ and the value $v(x)$ to each $x \in \chi \setminus \varphi$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Timed Games}
+\begin{definition}[Clock Constraint]
+A clock constraint over the set of clocks $\chi$ is a formula built on the grammar $\zeta(\chi) \ni g ::= x \backsim c \; \vert \; g \wedge g$, where $x$ ranges over $\chi$, $\backsim \in \lbrace <, \leq, =, \geq, > \rbrace$ and $c$ is an integer.
+\end{definition}
+  \begin{itemize}
+ 	\item A valuation $v$ over a set of clocks $\chi$ satisfies a clock constraint $g$ over $\chi$ if on assigning the values $v(x)$ to each $x \in \chi$, the clock constraint $g$ evaluates to true.
+ 	\item If a valuation $v$ satisfies a clock constraint $g$, we write it as $v \models g$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Timed Games}
+\begin{definition}[Timed Concurrent Reachability Game]
+A multi-player timed concurrent reachability game $G$ is defined as a 7-tuple, $G = (Loc, \chi, Inv, Trans, Agt, Owner, \Omega)$.
+\end{definition}
+\begin{itemize}
+\item $Loc$ is a finite set of locations.
+\item $\chi$ is a finite set of clocks.
+\item $Inv: Loc \rightarrow \zeta(\chi)$ assigns an invariant to each location. If $l$ is a location and $Inv(l) = g$, it means that while the game is at location $l$, the valuation of clocks in $\chi$ must satisfy the clock constraint $g$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Timed Games}
+\begin{itemize}
+\item $Trans \subseteq Loc \times \zeta(\chi) \times 2^{\chi} \times Loc$ is the set of transitions. If $\delta = (l, g, z, l')$ is a transition, it means that the transition $\delta$ is firable only if the clock constraint $g$ evaluates to true. Further, on firing the transition $\delta$, the game goes from location $l$ to location $l'$ and the clocks in the set $z$ are reset to $0$.
+\item $Agt$ is a finite set of agents (or players).
+\item $Owner: Trans \rightarrow Agt$ assigns an agent to each transition. If $Owner(\delta) = A$, it means that only player $A$ can fire the transition $\delta$.
+\item $\Omega: Agt \rightarrow 2^{Loc}$ assigns to each agent, a set of locations which is the reachability objective of that agent (i.e., the agent wants to reach at least one of these locations).
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Timed Games}
+\begin{itemize}
+\item A state of the game is an ordered pair $(l, v)$ where $l \in Loc$ and $v$ is a valuation over the set $\chi$ of clocks, provided that $v \models Inv(l)$.
+\item The game starts from an initial state $s_{0} = (l, \textbf{0})$, where $\textbf{0}$ is a valuation that assigns the value $0$ to every clock $x \in \chi$ and is assumed to satisfy $Inv(l)$.
+\item From each state $(l, v)$, every player $A$ chooses a non-negative real number $d$ and a transition $\delta = (l, g, z, l')$ with the intended meaning that the player $A$ wants to delay for $d$ time units and then fire the transition $\delta = (l, g, z, l')$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Timed Games}
+\begin{itemize}
+\item There are various natural restrictions on these choices:
+\begin{itemize}
+\item Spending $d$ time units in $l$ must be allowed, i.e., $v + d' \models Inv(l)$ for every $0 \leq d' \leq d$. As the invariants are convex, this is equivalent to having only $v + d \models Inv(l)$.
+\item Player $A$ must be the owner of the transition $\delta = (l, g, z, l')$, i.e., $Owner(\delta) = A$.
+\item The transition $\delta = (l, g, z, l')$ is firable after $d$ time units, i.e., $v + d \models g$.
+\item The invariant of $l'$ must be satisfied when entering $l'$, i.e., $[z \leftarrow 0](v + d) \models Inv(l')$.
+\end{itemize}
+\item If (and only if) there is no such possible choice for some player $A$, then $A$ chooses a null action (denoted by $\perp$).
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Timed Games}
+\begin{itemize}
+\item Given a tuple of choices $m_{Agt}$ of all the players, with $m_{A} \in (\mathbb{R}_{+} \times Trans) \cup \lbrace \perp \rbrace$, a player $B$ such that $d_{B} = min\lbrace d_{A} \; \vert \; A \in Agt \; \text{and} \; m_{A} = (d_{A}, \delta_{A}) \rbrace$ is selected non-deterministically, and the corresponding transition $\delta_{B} = (l, g_{B}, z_{B}, l')$ is applied leading to a new state $(l', [z_{B} \leftarrow 0](v + d_{B}))$.
+\end{itemize}
+\end{frame}
+
+\subsection*{Semantics of Timed Games}
+\begin{frame}
+\frametitle{Semantics of Timed Games}
+  \begin{itemize}
+	\item With a multi-player timed  concurrent reachability game $G = (Loc, \chi, Inv, Trans, Agt, Owner, \Omega)$, we can associate the infinite non-deterministic multi-player concurrent reachability game $G' = (States, Edg, Agt, Act, Mov, Tab, \Omega')$.
+ 	\item $States = \lbrace (l,v) \; \vert \; l \in Loc, \; v: \chi \rightarrow \mathbb{R}_{+} \; \text{such that} \; v \models Inv(l) \rbrace$.
+ 	\item $s_{0} = (l_{0}, \textbf{0})$ is the initial state.
+ 	\item The set of transitions $Trans$ in $G$ give rise to the set of edges $Edg$ in $G'$ as follows: for every $d \in \mathbb{R}_{+}$, every $\delta = (l, g, z, l')$ in $Trans$ and every $(l, v) \in States$ such that $v + d \models Inv(l) \wedge g$ and $[z \leftarrow 0](v + d) \models Inv(l')$, there is an edge $((l, v), (l', [z \leftarrow 0](v + d)))$ in $Edg$.
+  	\item The set of actions is $Act = \lbrace (d, \delta) \; \vert \; d \in \mathbb{R}_{+}, \; \delta \in Trans \rbrace \cup \lbrace \perp \rbrace$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Semantics of Timed Games}
+  \begin{itemize}
+	\item An action $(d, \delta)$ (where $\delta = (l, g, z, l')$) is allowed to player $A$ in state $(l, v)$ iff the following conditions hold:
+\begin{itemize}
+\item $(l, v + d) \in States$ (this is the case when $v + d \models Inv(l)$).
+\item $\delta = (l, g, z, l')$ is such that $Owner(\delta) = A$.
+\item $v + d \models g$.
+\item $[z \leftarrow 0](v + d) \models Inv(l')$
+\end{itemize}
+Then $Mov((l, v), A)$ is the set of actions allowed to player $A$ in state $(l, v)$ when this set is non empty, and $Mov((l, v), A) = \lbrace \perp \rbrace$ otherwise.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Semantics of Timed Games}
+  \begin{itemize}
+ 	\item Given a state $(l, v) \in States$ and a tuple of actions $(m_{A})_{A\in Agt}$ (a move $m_{Agt}$) allowed from this state, $Tab((l, v), m_{Agt})$ is defined as the set:
+\begin{align*}
+\Big\lbrace ((l, v), (l', v')) \; &\Big\vert \; \exists B. \; d_{B} = min\lbrace d_{A} \; \vert \; A \in Agt \; \text{and} \; m_{A} = (d_{A}, \delta_{A}) \rbrace\\
+&\quad \text{and} \; \delta_{B} = (l, g_{B}, z_{B}, l')\\
+&\quad \text{and} \; v' = [z_{B} \leftarrow 0](v + d_{B}) \Big\rbrace
+\end{align*}
+ 	\item  For every $A \in Agt$, $\Omega'(A) = \lbrace (l, v) \; \vert \; (l, v) \in States \; \text{and} \; l \in \Omega(A) \rbrace$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Semantics of Timed Games}
+  \begin{itemize}
+ 	\item Multi-player timed concurrent reachability games inherit the notions of path, history, play, strategy, strategy profile, outcome and \textit{k-resilient} pseudo-Nash equilibrium via the semantics described above.
+ 	\item  In this thesis, we consider only non-blocking multi-player timed concurrent reachability games. Non-blocking games are games in which for every state $(l, v)$, at least one player has an allowed action:
+\[\prod \limits_{A \in Agt} Mov((l, v), A) \neq \lbrace (\perp)_{A\in Agt} \rbrace\]
+  \end{itemize}
+\end{frame}
+
+\subsection*{Region Games}
+\begin{frame}
+\frametitle{Region Games}
+\begin{definition}[Region Game]
+Let $G = (Loc, \chi, Inv, Trans, Agt, Owner, \Omega)$ be a multi-player timed concurrent reachability game. We define a region game $G_{R}$ associated to $G$ as $G_{R} = (States_{R}, Edg_{R}, Agt, Act_{R}, Mov_{R}, Tab_{R}, \Omega_{R})$.
+\end{definition}
+  \begin{itemize}
+	\item $States_{R} = \lbrace (l, r) \in Loc \times \Re \; \vert \; r \models Inv(l) \rbrace$ where $\Re$ is the set of clock regions.
+ 	\item $Edg_{R}$ is the set of transitions of the region automaton underlying $G$.
+ 	\item $Act_{R} = \lbrace (r, p, \delta) \; \vert \; r \in \Re, \; p \in \lbrace 1, 2, 3 \rbrace \; \text{and} \; \delta \in Trans \rbrace \cup \lbrace \perp \rbrace$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Region Games}
+  \begin{itemize}
+\item $Mov_{R}: States_{R} \times Agt \rightarrow 2^{Act_{R}} \setminus \lbrace \emptyset \rbrace$ is such that:
+\begin{align*}
+Mov_{R}((l, r), A) &= \Big\lbrace (r', p, \delta) \; \Big\vert \; r' \in Succ(r), \; r' \models Inv(l),\\
+&\qquad p \in \lbrace 1, 2, 3 \rbrace \; \text{if} \; r' \; \text{is time-elapsing,} \; \text{else} \; p = 1,\\
+&\qquad \delta = (l, g, z, l') \in Trans \; \text{is such that} \; r' \models g\\
+&\qquad \text{and} \; [z \leftarrow 0]r' \models Inv(l') \; \text{and} \; Owner(\delta) = A \Big\rbrace
+\end{align*}
+if it is non-empty and $Mov_{R}((l, r), A) = \lbrace \perp \rbrace$ otherwise. Roughly, the index $p$ allows the players to say if they want to play first, second or later if their region is selected.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Region Games}
+  \begin{itemize}
+\item $Tab_{R}: States_{R} \times Act_{R}^{Agt} \rightarrow 2^{Edg_{R}} \setminus \lbrace \emptyset \rbrace$ is such that for every $(l, r) \in States_{R}$ and every $m_{Agt} \in \prod \limits_{A \in Agt} Mov_{R}((l, r), A)$, if we write $r'$ for $min\lbrace r_{A} \; \vert \; m_{A} = (r_{A}, p_{A}, \delta_{A}) \rbrace$ and $p'$ for $min\lbrace p_{A} \; \vert \; m_{A} = (r', p_{A}, \delta_{A}) \rbrace$, then
+\begin{align*}
+Tab_{R}((l, r), m_{Agt}) &= \Big\lbrace ((l, r), (l_{B}, [z_{B} \leftarrow 0]r_{B})) \; \Big\vert \; m_{B} = (r_{B}, p_{B}, \delta_{B})\\
+&\qquad \text{with} \; r_{B} = r', \; p_{B} = p'\\
+&\qquad \text{and} \; \delta_{B} = (l, g_{B}, z_{B}, l_{B}) \Big\rbrace
+\end{align*}
+\item For every $A \in Agt$, $\Omega_{R}(A) = \lbrace (l, r) \; \vert \; (l, r) \in States_{R} \; \text{and} \; l \in \Omega(A) \rbrace$
+  \end{itemize}
+\end{frame}
+
+\subsection*{K-Resilient Nash Equilibria in Timed Games}
+\begin{frame}
+\frametitle{K-Resilient Nash Equilibria in Timed Games}
+\Fontvi
+\begin{lemma}[7]
+\Fontvi
+Consider two games $G$ and $G'$ involving the same set of agents ($Agt$) with reachability objectives given as $\Omega$ and $\Omega'$ respectively. For some $k \leq \vert Agt \vert$, assume that there exists a binary relation $\backsim_{k}$ between states of $G$ and states of $G'$ such that if $s \backsim_{k} s'$, then:
+\begin{itemize}
+\Fontvi
+\item For every $A \in Agt$, if $s' \in \Omega'(A)$ then $s \in \Omega(A)$.
+\item For every move $m_{Agt}$ in $G$, there exists a move $m'_{Agt}$ in $G'$ such that:
+\begin{itemize}
+\Fontvi
+\item For every $t'$ in $G'$, there is $t \backsim_{k} t'$ in $G$ s.t. $k-Susp_{G'}((s', t'), m'_{Agt}) \subseteq k-Susp_{G}((s, t), m_{Agt})$.
+\item For every $(s, t) \in Tab(s, m_{Agt})$, there is a $(s', t') \in Tab(s', m'_{Agt})$ s.t. $t \backsim_{k} t'$.
+\end{itemize}
+\end{itemize}
+Then for every $P \subseteq Agt$ and every $X \subseteq 2^{Agt}_{k}$ such that $P \bigcap \left( \bigcup \limits_{W \in X}W \right) = P$ and for every $s$ and $s'$ such that $s \backsim_{k} s'$, it holds:
+\begin{enumerate}
+\Fontvi
+\item If $s \in k-Rep_{G}(P, X)$, then $s' \in k-Rep_{G'}(P, X)$.
+\item For every $(s, t) \in Edg_{k-Rep}$, there exists $(s', t') \in Edg'_{k-Rep}$ s.t. $t \backsim_{k} t'$, where $Edg_{k-Rep}$ and $Edg'_{k-Rep}$ are the set of edges in transition systems $k-S_{G}(P, X)$ and $k-S_{G'}(P, X)$ respectively.
+\end{enumerate}
+\end{lemma}
+\textit{Proof (Sketch).} This lemma can be easily proved by induction on the ordered pair $(P, X)$.
+\end{frame}
+
+\begin{frame}
+\frametitle{K-Resilient Nash Equilibria in Timed Games}
+\begin{itemize}
+\item It can be proved that a timed game $G$ and its associated region game $G_{R}$ simulate each other in the sense of Lemma 7 via relation $\backsim_{k}$ for every $k \leq \vert Agt \vert$.
+\item It can be proved that for every $k \leq \vert Agt \vert$, there is a binary relation $\backsim_{k}$ (as defined in Lemma 7), such that the the relation $\backsim_{k}$ exists between states of $G$ and states of $G_{R}$ and the relation $\backsim_{k}$ also exists between states of $G_{R}$ and states of $G$.
+\item In particular, for every state $(l, v)$ in $G$ and every state $(l, r)$ in $G_{R}$, if $r$ is the region containing $v$ then $(l, v) \backsim_{k} (l, r)$ and $(l, r) \backsim_{k} (l, v)$ for every $k \leq \vert Agt \vert$.
+\item This proof is possible by using the translations $\lambda$ (which maps moves in $G$ to equivalent moves in $G_{R}$) and $\mu$ (which maps moves in $G_{R}$ to equivalent moves in $G$) as defined in \cite{BBM-concur10,BBM-report}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{K-Resilient Nash Equilibria in Timed Games}
+\begin{itemize}
+\item From Lemma 7, it can be inferred that for every $P \subseteq Agt$ and every $X \subseteq 2^{Agt}_{k}$ such that $P \bigcap \left( \bigcup \limits_{W \in X}W \right) = P$ and for every state $(l, v)$ in $G$ and corresponding state $(l, r)$ in $G_{R}$ such that $r$ is the region containing $v$, the following two results hold:
+\begin{enumerate}
+\item $(l, v) \in k-Rep_{G}(P, X) \Leftrightarrow (l, r) \in k-Rep_{G_{R}}(P, X)$.
+\item $((l, v), (l', v')) \in Edg_{k-Rep}^{G} \Leftrightarrow ((l, r), (l', r')) \in Edg_{k-Rep}^{G_{R}}$ where $r'$ is the region containing $v'$ and $Edg_{k-Rep}^{G}$ and $Edg_{k-Rep}^{G_{R}}$ are the set of edges in the transition systems $k-S_{G}(P, X)$ and $k-S_{G_{R}}(P, X)$ respectively.
+\end{enumerate}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{K-Resilient Nash Equilibria in Timed Games}
+\begin{theorem}[8]
+Let $G$ be a multi-player timed concurrent reachability game and let $G_{R}$ be its associated region game. Then for every $k \leq \vert Agt \vert$, there is a \textit{k-resilient} pseudo-Nash equilibrium in $G$ from $(s, \textbf{0})$ if and only if there is a \textit{k-resilient} pseudo-Nash equilibrium in $G_{R}$ from $(s, [\textbf{0}])$ where $[\textbf{0}]$ is the region associated to valuation $\textbf{0}$. Furthermore, this equivalence is constructive.
+\end{theorem}
+\textit{Proof (Sketch).}
+\begin{itemize}
+\item We have established that a timed game $G$ and its associated region game $G_{R}$ simulate each other in the sense of Lemma 7 via relation $\backsim_{k}$ for every $k \leq \vert Agt \vert$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{K-Resilient Nash Equilibria in Timed Games}
+\begin{itemize}
+\item It follows that for every $P \subseteq Agt$, there is a path $\rho$ in $k-S_{G}(P, 2^{Agt}_{k})$ if and only if there is a corresponding path $\rho'$ in $k-S_{G_{R}}(P, 2^{Agt}_{k})$ which visits exactly the same regions visited by $\rho$.
+\item Therefore, there is an infinite path $\rho$ in $k-S_{G}(P, 2^{Agt}_{k})$ from $(s, \textbf{0})$ which visits $\Omega(A)$ for every $A \notin P$, if and only if, there is an infinite path $\rho'$ in $k-S_{G_{R}}(P, 2^{Agt}_{k})$ from $(s, [\textbf{0}])$ which visits $\Omega_{R}(A)$ for every $A \notin P$.
+\item From Theorem 5, we conclude that there is a \textit{k-resilient} pseudo-Nash equilibrium in $G$ from $(s, \textbf{0})$ if and only if there is a \textit{k-resilient} pseudo-Nash equilibrium in $G_{R}$ from $(s, [\textbf{0}])$. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{K-Resilient Nash Equilibria in Timed Games}
+\begin{itemize}
+\item By Theorem 8, we can infer that the translation of a multi-player timed concurrent reachability game to its associated region game preserves a \textit{k-resilient} pseudo-Nash equilibrium (if one exists).
+\item Hence, in order to check the existence of \textit{k-resilient} pseudo-Nash equilibrium in a multi-player timed concurrent reachability game, we can translate the timed game to its associated region game and then check the existence of \textit{k-resilient} pseudo-Nash equilibrium in the region game.
+\item As the region games in this case are finite non-deterministic multi-player concurrent reachability games, we can apply Algorithm 1 to check the existence of \textit{k-resilient} pseudo-Nash equilibrium in the region games.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{K-Resilient Nash Equilibria in Timed Games}
+\begin{itemize}
+\item The translation of a multi-player timed concurrent reachability game to its associated region game results in an exponential blow-up in the number of states and an exponential blow-up in the size of transition table but the number of agents is unchanged.
+\item Recall that Algorithm 1 runs in time exponential with respect to the number of states and the size of transition table but doubly exponential with respect to the number of agents.
+\item Therefore, the algorithm for timed games runs in time doubly exponential with respect to the number of states, size of transition table and the number of agents. Hence the algorithm is doubly exponential with respect to the size of input and is still in 2-EXPTIME.
+\end{itemize}
+\end{frame}
+
+\section[Conclusion]{Conclusion}
+\begin{frame}
+ \frametitle{Conclusion}
+ \begin{itemize}
+	\item We studied non-deterministic multi-player concurrent reachability games as defined in \cite{BBM-concur10,BBM-report}.
+ 	\item We proved some properties that characterize \textit{k-resilient} Nash equilibria in these games when only pure strategies are allowed.
+ 	\item We then used these properties to develop algorithms for checking existence of \textit{k-resilient} Nash equilibrium in finite non-deterministic multi-player concurrent reachability games in untimed and timed settings when only pure strategies are allowed.
+ 	\item Our algorithms are in 2-EXPTIME.
+ 	\item The properties that we proved also contain all the necessary information to compute a \textit{k-resilient} Nash equilibrium if it exists.
+  \end{itemize}
+\end{frame}
+
+\section[Future Work]{Future work}
+\begin{frame}
+ \frametitle{Future Work}
+\begin{itemize}
+	\item We have not been able to prove the optimality of our algorithms. It may be interesting to check if the algorithms can be made better using non-determinism or if 2-EXPTIME (complexity class of proposed algorithms) is actually the lower bound for the problems.
+	\item We have considered games where only pure strategies are allowed. The work may be extended to games where players can have mixed strategies.
+	\item We have considered games with reachability objectives only. The work may be extended to study \textit{k-resilient} Nash equilibria in games with other qualitative objectives like safety objectives, B{\"u}chi objectives, co-B{\"u}chi objectives, Rabin objectives and parity objectives.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{References}
+  \bibliographystyle{plain}
+  \Fontci
+  \bibliography{References}
+\end{frame}
+
+\begin{frame}
+ \begin{center}
+  \Fontti
+  THANK YOU!!
+ \end{center}
+\end{frame}
+
+\end{document}

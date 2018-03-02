@@ -1,0 +1,6 @@
+\beamer@endinputifotherversion {3.26pt}
+\beamer@sectionintoc {1}{Introduction}{3}{0}{1}
+\beamer@sectionintoc {2}{Multi-Player Concurrent Reachability Games}{23}{0}{2}
+\beamer@sectionintoc {3}{Timed Concurrent Reachability Games}{59}{0}{3}
+\beamer@sectionintoc {4}{Conclusion}{84}{0}{4}
+\beamer@sectionintoc {5}{Future work}{86}{0}{5}

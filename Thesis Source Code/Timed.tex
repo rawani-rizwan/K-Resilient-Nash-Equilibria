@@ -1,0 +1,300 @@
+\chapter{Timed Concurrent Reachability Games}
+
+In this chapter, we describe the notion of timed games and their importance in formal specification and verification of real time systems. We then describe the semantics of timed games with reachability objectives in terms of an infinite non-deterministic multi-player concurrent reachability game. We then define the notion of region games which are finite games derived from the classical concept of region based abstraction of timed games. We prove that the translation of a timed concurrent reachability game to its associated region game preserves a \textit{k-resilient} Nash equilibrium (if one exists). Thus, existence of \textit{k-resilient} Nash equilibrium in a timed concurrent reachability game can be checked by translating the timed game to its associated region game and then checking existence of \textit{k-resilient} Nash equilibrium in the region game (using methods described in Chapter 2). For proper understanding of timed games and their associated region games, the reader should be familiar with the basic concepts of timed automata and their associated region automata. We describe the basic theory of timed automata (required for proper understanding of this chapter) in Appendix A.
+
+\section{Timed Games}
+
+For formal specification and verification of real time systems that involve timing constraints (such as flight control systems installed in an aeroplane), we need to include the timing constraints while modelling the system specification. If a system desires some properties that include timing constraints, we should be able to include the concept of `time' in the system specification. In order to verify that the system has such desired properties (that include timing constraints), the system model must be able to capture such properties completely in its specification. For this purpose, \citet{1} define a concept of timed automata. Timed automata are a natural extension of finite automata in the sense that transitions in timed automata not just read a symbol (over an alphabet) but also take into account the `time' at which a symbol is read. If a symbol represents an event, then transitions in timed automata depend not only on the occurrence of an event, but also on the time of occurrence of an event. Thus, timed automata are able to capture properties that involve timing constraints and hence are useful in formal specification and verification of real time systems. For more details on timed automata, we refer the reader to Appendix A.
+
+Timed games are defined in a way similar to timed automata, but include necessary game theoretic concepts. Real time systems that involve multiple agents interacting with each other can be modelled as multi-player timed games. Game theoretic solution concepts can then be used to study the properties of such systems. In this thesis, we are interested in multi-player timed concurrent reachability games as defined in \cite{BBM-concur10,BBM-report}.
+
+We begin with defining the concept of clocks and clock valuations as defined in \cite{1,BBM-concur10,BBM-report}.
+
+\begin{definition}
+Consider a finite set of clocks $\chi$. A valuation $v$ over the finite set of clocks $\chi$ is an application $v: \chi \rightarrow \mathbb{R}_{+}$ that assigns to each clock $x \in \chi$, a positive real number that signifies the units of time since the clock $x$ was last reset.
+\end{definition}
+
+If $v$ is a valuation over the set of clocks $\chi$ and $t \in \mathbb{R}_{+}$, then $v + t$ is the valuation that assigns to each $x \in \chi$, the value $v(x) + t$.
+
+If $v$ is a valuation over the set of clocks $\chi$ and $\varphi \subseteq \chi$, then $[\varphi \leftarrow 0]v$ is the valuation that assigns the value $0$ to each $y \in \varphi$ and the value $v(x)$ to each $x \in \chi \setminus \varphi$.
+
+We now recall the concept of clock constraints from \cite{1,BBM-concur10,BBM-report}.
+
+\begin{definition}
+A clock constraint over the set of clocks $\chi$ is a formula built on the grammar $\zeta(\chi) \ni g ::= x \backsim c \; \vert \; g \wedge g$, where $x$ ranges over $\chi$, $\backsim \in \lbrace <, \leq, =, \geq, > \rbrace$ and $c$ is an integer.
+\end{definition}
+
+A valuation $v$ over a set of clocks $\chi$ satisfies a clock constraint $g$ over $\chi$ if on assigning the values $v(x)$ to each $x \in \chi$, the clock constraint $g$ evaluates to true. If a valuation $v$ satisfies a clock constraint $g$, we write it as $v \models g$.
+
+We now recall the definition of multi-player timed concurrent reachability games from \cite{BBM-concur10,BBM-report}.
+
+\begin{definition}
+A multi-player timed concurrent reachability game $G$ is defined as a 7-tuple, $G = (Loc, \chi, Inv, Trans, Agt, Owner, \Omega)$ where:
+\begin{itemize}
+\item $Loc$ is a finite set of locations.
+\item $\chi$ is a finite set of clocks.
+\item $Inv: Loc \rightarrow \zeta(\chi)$ assigns an invariant to each location. If $l$ is a location and $Inv(l) = g$, it means that while the game is at location $l$, the valuation of clocks in $\chi$ must satisfy the clock constraint $g$.
+\item $Trans \subseteq Loc \times \zeta(\chi) \times 2^{\chi} \times Loc$ is the set of transitions. If $\delta = (l, g, z, l')$ is a transition, it means that the transition $\delta$ is firable only if the clock constraint $g$ evaluates to true. Further, on firing the transition $\delta$, the game goes from location $l$ to location $l'$ and the clocks in the set $z$ are reset to $0$.
+\item $Agt$ is a finite set of agents (or players).
+\item $Owner: Trans \rightarrow Agt$ assigns an agent to each transition. If $Owner(\delta) = A$, it means that only player $A$ can fire the transition $\delta$.
+\item $\Omega: Agt \rightarrow 2^{Loc}$ assigns to each agent, a set of locations which is the reachability objective of that agent (i.e., the agent wants to reach at least one of these locations).
+\end{itemize}
+\end{definition}
+
+A multi-player timed concurrent reachability game $G$ is played as follows: a state of the game is an ordered pair $(l, v)$ where $l \in Loc$ and $v$ is a valuation over the set $\chi$ of clocks, provided that $v \models Inv(l)$. From each state $(l, v)$ (starting from an initial state $s_{0} = (l, \textbf{0})$, where $\textbf{0}$ is a valuation that assigns the value $0$ to every clock $x \in \chi$ and is assumed to satisfy $Inv(l)$), every player $A$ chooses a non-negative real number $d$ and a transition $\delta = (l, g, z, l')$ with the intended meaning that the player $A$ wants to delay for $d$ time units and then fire the transition $\delta = (l, g, z, l')$. There are various natural restrictions on these choices:
+\begin{itemize}
+\item Spending $d$ time units in $l$ must be allowed, i.e., $v + d' \models Inv(l)$ for every $0 \leq d' \leq d$. As the invariants are convex, this is equivalent to having only $v + d \models Inv(l)$.
+\item Player $A$ must be the owner of the transition $\delta = (l, g, z, l')$, i.e., $Owner(\delta) = A$.
+\item The transition $\delta = (l, g, z, l')$ is firable after $d$ time units, i.e., $v + d \models g$.
+\item The invariant of $l'$ must be satisfied when entering $l'$, i.e., $[z \leftarrow 0](v + d) \models Inv(l')$.
+\end{itemize}
+
+If (and only if) there is no such possible choice for some player $A$, then $A$ chooses a null action (denoted by $\perp$).
+
+Given a tuple of choices $m_{Agt}$ of all the players, with $m_{A} \in (\mathbb{R}_{+} \times Trans) \cup \lbrace \perp \rbrace$, a player $B$ such that $d_{B} = min\lbrace d_{A} \; \vert \; A \in Agt \; \text{and} \; m_{A} = (d_{A}, \delta_{A}) \rbrace$ is selected non-deterministically, and the corresponding transition $\delta_{B} = (l, g_{B}, z_{B}, l')$ is applied leading to a new state $(l', [z_{B} \leftarrow 0](v + d_{B}))$.
+
+\section{Semantics of Timed Games}
+
+The semantics of a multi-player timed concurrent reachability game as described in the previous section can be expressed in terms of an infinite-state non-deterministic multi-player concurrent reachability game. We recall the semantics of multi-player timed concurrent reachability games from \cite{BBM-concur10,BBM-report}. With a multi-player timed  concurrent reachability game $G = (Loc, \chi, Inv, Trans, Agt, Owner, \Omega)$, we can associate the infinite non-deterministic multi-player concurrent reachability game $G' = (States, Edg, Agt, Act, Mov, Tab, \Omega')$ such that:
+\begin{itemize}
+\item $States = \lbrace (l,v) \; \vert \; l \in Loc, \; v: \chi \rightarrow \mathbb{R}_{+} \; \text{such that} \; v \models Inv(l) \rbrace$.
+\item $s_{0} = (l_{0}, \textbf{0})$ is the initial state.
+\item The set of transitions $Trans$ in $G$ give rise to the set of edges $Edg$ in $G'$ as follows: for every $d \in \mathbb{R}_{+}$, every $\delta = (l, g, z, l')$ in $Trans$ and every $(l, v) \in States$ such that $v + d \models Inv(l) \wedge g$ and $[z \leftarrow 0](v + d) \models Inv(l')$, there is an edge $((l, v), (l', [z \leftarrow 0](v + d)))$ in $Edg$.
+\item The set of actions is $Act = \lbrace (d, \delta) \; \vert \; d \in \mathbb{R}_{+}, \; \delta \in Trans \rbrace \cup \lbrace \perp \rbrace$.
+\item An action $(d, \delta)$ (where $\delta = (l, g, z, l')$) is allowed to player $A$ in state $(l, v)$ iff the following conditions hold:
+\begin{itemize}
+\item $(l, v + d) \in States$ (this is the case when $v + d \models Inv(l)$).
+\item $\delta = (l, g, z, l')$ is such that $Owner(\delta) = A$.
+\item $v + d \models g$.
+\item $[z \leftarrow 0](v + d) \models Inv(l')$
+\end{itemize}
+Then $Mov((l, v), A)$ is the set of actions allowed to player $A$ in state $(l, v)$ when this set is non empty, and $Mov((l, v), A) = \lbrace \perp \rbrace$ otherwise.
+\item Given a state $(l, v) \in States$ and a tuple of actions $(m_{A})_{A\in Agt}$ (a move $m_{Agt}$) allowed from this state, $Tab((l, v), m_{Agt})$ is defined as the set:
+\begin{align*}
+\Big\lbrace ((l, v), (l', v')) \; &\Big\vert \; \exists B. \; d_{B} = min\lbrace d_{A} \; \vert \; A \in Agt \; \text{and} \; m_{A} = (d_{A}, \delta_{A}) \rbrace\\
+&\quad \text{and} \; \delta_{B} = (l, g_{B}, z_{B}, l') \; \text{and} \; v' = [z_{B} \leftarrow 0](v + d_{B}) \Big\rbrace
+\end{align*}
+\item  For every $A \in Agt$, $\Omega'(A) = \lbrace (l, v) \; \vert \; (l, v) \in States \; \text{and} \; l \in \Omega(A) \rbrace$.
+\end{itemize}
+
+Multi-player timed concurrent reachability games inherit the notions of path, history, play, strategy, strategy profile, outcome and \textit{k-resilient} pseudo-Nash equilibrium via the semantics described above.
+
+In this thesis, we consider only non-blocking multi-player timed concurrent reachability games. Non-blocking games are games in which for every state $(l, v)$, at least one player has an allowed action:
+\[\prod \limits_{A \in Agt} Mov((l, v), A) \neq \lbrace (\perp)_{A\in Agt} \rbrace\]
+
+\section{Region Games}
+
+In this section, we recall the notion of region games from \cite{BBM-concur10,BBM-report}. Region games are finite games derived from the region based abstraction of timed games. This relies on the classical notion of \textit{clock regions} and \textit{region automaton} associated with a timed automaton \cite{1}. For more details on \textit{clock regions} and \textit{region automaton}, we refer the reader to Appendix A.
+
+We now recall the definition of region games from \cite{BBM-concur10,BBM-report}.
+
+\begin{definition}
+Let $G = (Loc, \chi, Inv, Trans, Agt, Owner, \Omega)$ be a multi-player timed concurrent reachability game. We define a region game $G_{R}$ associated to $G$ as $G_{R} = (States_{R}, Edg_{R}, Agt, Act_{R}, Mov_{R}, Tab_{R}, \Omega_{R})$ where:
+\begin{itemize}
+\item $States_{R} = \lbrace (l, r) \in Loc \times \Re \; \vert \; r \models Inv(l) \rbrace$ where $\Re$ is the set of clock regions.
+\item $Edg_{R}$ is the set of transitions of the region automaton underlying $G$.
+\item $Act_{R} = \lbrace (r, p, \delta) \; \vert \; r \in \Re, \; p \in \lbrace 1, 2, 3 \rbrace \; \text{and} \; \delta \in Trans \rbrace \cup \lbrace \perp \rbrace$.
+\item $Mov_{R}: States_{R} \times Agt \rightarrow 2^{Act_{R}} \setminus \lbrace \emptyset \rbrace$ is such that:
+\begin{align*}
+Mov_{R}((l, r), A) &= \Big\lbrace (r', p, \delta) \; \Big\vert \; r' \in Succ(r), \; r' \models Inv(l),\\
+&\qquad p \in \lbrace 1, 2, 3 \rbrace \; \text{if} \; r' \; \text{is time-elapsing,} \; \text{else} \; p = 1,\\
+&\qquad \delta = (l, g, z, l') \in Trans \; \text{is such that} \; r' \models g\\
+&\qquad \text{and} \; [z \leftarrow 0]r' \models Inv(l') \; \text{and} \; Owner(\delta) = A \Big\rbrace
+\end{align*}
+if it is non-empty and $Mov_{R}((l, r), A) = \lbrace \perp \rbrace$ otherwise. Roughly, the index $p$ allows the players to say if they want to play first, second or later if their region is selected.
+\item $Tab_{R}: States_{R} \times Act_{R}^{Agt} \rightarrow 2^{Edg_{R}} \setminus \lbrace \emptyset \rbrace$ is such that for every $(l, r) \in States_{R}$ and every $m_{Agt} \in \prod \limits_{A \in Agt} Mov_{R}((l, r), A)$, if we write $r'$ for $min\lbrace r_{A} \; \vert \; m_{A} = (r_{A}, p_{A}, \delta_{A}) \rbrace$ and $p'$ for $min\lbrace p_{A} \; \vert \; m_{A} = (r', p_{A}, \delta_{A}) \rbrace$, then
+\begin{align*}
+Tab_{R}((l, r), m_{Agt}) &= \Big\lbrace ((l, r), (l_{B}, [z_{B} \leftarrow 0]r_{B})) \; \Big\vert \; m_{B} = (r_{B}, p_{B}, \delta_{B})\\
+&\qquad \text{with} \; r_{B} = r', \; p_{B} = p' \; \text{and} \; \delta_{B} = (l, g_{B}, z_{B}, l_{B}) \Big\rbrace
+\end{align*}
+\item For every $A \in Agt$, $\Omega_{R}(A) = \lbrace (l, r) \; \vert \; (l, r) \in States_{R} \; \text{and} \; l \in \Omega(A) \rbrace$
+\end{itemize}
+\end{definition}
+
+\section{\textit{K-Resilient} Nash Equilibria in Timed Games}
+
+In this section, we prove that the translation of a multi-player timed concurrent reachability game to its associated region game preserves a \textit{k-resilient} Nash equilibrium (if one exists). Thus, existence of \textit{k-resilient} Nash equilibrium in a multi-player timed concurrent reachability game can be checked by translating the timed game to its associated region game and then checking existence of \textit{k-resilient} Nash equilibrium in the region game.
+
+\begin{lemma}
+\label{lemma8}
+Consider two games $G$ and $G'$ involving the same set of agents ($Agt$) with reachability objectives given as $\Omega$ and $\Omega'$ respectively. For some $k \leq \vert Agt \vert$, assume that there exists a binary relation $\backsim_{k}$ between states of $G$ and states of $G'$ such that if $s \backsim_{k} s'$, then:
+\begin{itemize}
+\item For every $A \in Agt$, if $s' \in \Omega'(A)$ then $s \in \Omega(A)$.
+\item For every move $m_{Agt}$ in $G$, there exists a move $m'_{Agt}$ in $G'$ such that:
+\begin{itemize}
+\item For every $t'$ in $G'$, there is $t \backsim_{k} t'$ in $G$ s.t. $k-Susp_{G'}((s', t'), m'_{Agt}) \subseteq k-Susp_{G}((s, t), m_{Agt})$.
+\item For every $(s, t) \in Tab(s, m_{Agt})$, there is a $(s', t') \in Tab(s', m'_{Agt})$ s.t. $t \backsim_{k} t'$.
+\end{itemize}
+\end{itemize}
+Then for every $P \subseteq Agt$ and every $X \subseteq 2^{Agt}_{k}$ such that $P \bigcap \left( \bigcup \limits_{W \in X}W \right) = P$ and for every $s$ and $s'$ such that $s \backsim_{k} s'$, it holds:
+\begin{enumerate}
+\item If $s \in k-Rep_{G}(P, X)$, then $s' \in k-Rep_{G'}(P, X)$.
+\item For every $(s, t) \in Edg_{k-Rep}$, there exists $(s', t') \in Edg'_{k-Rep}$ s.t. $t \backsim_{k} t'$, where $Edg_{k-Rep}$ and $Edg'_{k-Rep}$ are the set of edges in transition systems $k-S_{G}(P, X)$ and $k-S_{G'}(P, X)$ respectively.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+The proof is by induction on the ordered pair $(P, X)$.
+
+Base case: When $P = \emptyset$, $k-Rep_{G}(\emptyset, X) = States$ and $k-Rep_{G'}(\emptyset, X) = States'$ for every $X \subseteq 2^{Agt}_{k}$. Hence the results hold trivially.
+
+Inductive step: For some $(P, X)$, assume that the implication holds true for every $(P', X') \lneq (P, X)$ which satisfy the condition $P' \bigcap \left( \bigcup \limits_{W \in X'}W \right) = P'$.
+
+Let us define a set $R$ as:
+\[R = \lbrace s' \in States' \; \vert \; \exists s \in k-Rep_{G}(P, X) \; \text{and} \; s \backsim_{k} s' \rbrace\]
+
+Pick $s' \in R$ and a corresponding $s \in k-Rep_{G}(P, X)$ such that $s \backsim_{k} s'$. In particular, for every $A \in P$, we have $s \notin \Omega(A)$, hence $s' \notin \Omega'(A)$. Therefore $R \cap \Omega'(A) = \emptyset$ for every $A \in P$.
+
+Also, since $s \in k-Rep_{G}(P, X)$, there exists $m_{Agt}$ such that for every $t \in States$, we have $t \in k-Rep_{G}(P', X')$ where $X' = k-Susp_{G}((s, t), m_{Agt}) \cap X$ and $P' = P \bigcap \left( \bigcup \limits_{W \in X'}W \right)$. Since $s \backsim_{k} s'$, there exists $m'_{Agt}$ such that for every $t' \in States'$, there exists $t \backsim_{k} t'$ such that $k-Susp_{G'}((s', t'), m'_{Agt}) \subseteq k-Susp_{G}((s, t), m_{Agt})$. Then:
+
+If $X \subseteq k-Susp_{G}((s, t), m_{Agt})$, then $X' = X$ and $P' = P$ which gives $t \in k-Rep_{G}(P, X)$ and therefore $t' \in R$.
+
+Otherwise $k-Susp_{G}((s, t), m_{Agt}) \cap X \subsetneq X$. As a consequence, we also have $k-Susp_{G'}((s', t'), m'_{Agt}) \cap X \subsetneq X$. We have $X' = k-Susp_{G}((s, t), m_{Agt}) \cap X$, $P' = P \bigcap \left( \bigcup \limits_{W \in X'}W \right)$ and $t \in k-Rep_{G}(P', X')$. Now since $X' \subsetneq X$ and $P' \subseteq P$, we have $(P', X') \lneq (P, X)$. Applying induction hypothesis on $(P', X')$, we get $t' \in k-Rep_{G'}(P', X')$. Let $k-Susp_{G'}((s', t'), m'_{Agt}) \cap X = X''$ and $P \bigcap \left( \bigcup \limits_{W \in X''}W \right) = P''$. Then we have $X'' \subseteq X'$ and $P'' \subseteq P'$. Therefore by Lemma \ref{lemma2}, $t' \in k-Rep_{G'}(P'', X'')$ where $X'' = k-Susp_{G'}((s', t'), m'_{Agt}) \cap X$ and $P'' = P \bigcap \left( \bigcup \limits_{W \in X''}W \right)$.
+
+This proves that $R \subseteq k-Rep_{G'}(P, X)$ (as any $s' \in R$ satisfies both the conditions of Definition \ref{k-rep} to stay in $k-Rep_{G'}(P, X)$). Therefore the first property of the implication follows.
+
+Now we need to prove the second property of the implication. Let $s \backsim_{k} s'$ and $(s, t) \in Edg_{k-Rep}$: there exists $m_{Agt} \in k-Secure_{G}(s, P, X)$ such that $(s, t) \in Tab(s, m_{Agt})$. Since $m_{Agt} \in k-Secure_{G}(s, P, X)$, any state $u \in States$ satisfies $u \in k-Rep_{G}(P', X')$ where $X' = k-Susp_{G}((s, u), m_{Agt}) \cap X$ and $P' = P \bigcap \left( \bigcup \limits_{W \in X'}W \right)$.
+
+Since $s \backsim_{k} s'$, there exists $m'_{Agt}$ such that for every $u' \in States'$, there exists $u \backsim_{k} u'$ such that $k-Susp_{G'}((s', u'), m'_{Agt}) \subseteq k-Susp_{G}((s, u), m_{Agt})$. From the first property of implication, we get that $u' \in k-Rep_{G'}(P', X')$ (this is because $u \in k-Rep_{G}(P', X')$). Let $k-Susp_{G'}((s', u'), m'_{Agt}) \cap X = X''$ and $P \bigcap \left( \bigcup \limits_{W \in X''}W \right) = P''$. Then we have $X'' \subseteq X'$ and $P'' \subseteq P'$. Therefore by Lemma \ref{lemma2}, $u' \in k-Rep_{G'}(P'', X'')$.
+
+Therefore, we have that, $m'_{Agt}$ is such that for every $u' \in States'$, it holds: $u' \in k-Rep_{G'}(P'', X'')$ where $X'' = k-Susp_{G'}((s', u'), m'_{Agt}) \cap X$ and $P'' = P \bigcap \left( \bigcup \limits_{W \in X''}W \right)$. This proves that $m'_{Agt}$ is a \textit{k-secure move}, i.e., $m'_{Agt} \in k-Secure_{G'}(s', P, X)$. For this $m'_{Agt}$, we also have $(s', t') \in Tab(s', m'_{Agt})$ for some $t'$ such that $t \backsim_{k} t'$. Such an $(s', t') \in Edg'_{k-Rep}$. This proves the second property of the implication.
+\end{proof}
+
+Consider a multi-player timed concurrent reachability game $G$ and its associated region game $G_{R}$. We shall prove that the timed game $G$ and its associated region game $G_{R}$ simulate each other in the sense of Lemma \ref{lemma8}. Our proofs are a natural generalization of those in \cite{BBM-concur10,BBM-report}.
+
+As in \cite{BBM-concur10,BBM-report}, we pick three partial functions $f_{1}, f_{2}, f_{3}: \mathbb{R}_{+}^{\chi} \times \Re \rightarrow \mathbb{R}_{+}$ such that, for every valuation $v$ and every clock region $r$, if there is some $t \in \mathbb{R}_{+}$ such that $v + t \in r$, then all three functions are defined at $(v, r)$, and we require that $v + f_{i}(v, r) \in r$ for every $i \in \lbrace 1, 2, 3 \rbrace$, and that $f_{1}(v, r) < f_{2}(v, r) < f_{3}(v, r)$ if $r$ is open and $f_{1}(v, r) = f_{2}(v, r) = f_{3}(v, r)$ otherwise. If no such $t$ exists, then all three functions are undefined at $(v, r)$.
+
+\textbf{\textit{From timed game $G$ to region game $G_{R}$}}: We show that for every $k \leq \vert Agt \vert$, there is a binary relation $\backsim_{k}$ (as defined in Lemma \ref{lemma8}) between states of $G$ and states of $G_{R}$ such that $(l, v) \backsim_{k} (l, r)$ if $r$ is the region containing $v$. By definition of $\Omega$ in $G$ and $\Omega_{R}$ in $G_{R}$, the first condition for the relation $\backsim_{k}$ as given in Lemma \ref{lemma8} holds.
+
+Now, for every state $(l, v)$ and every move $m_{Agt} = (m_{A})_{A\in Agt}$ in $G$, we define the move $(\lambda_{A})_{A\in Agt} = \lambda((l, v), m_{Agt})$ in $G_{R}$ as follows: let $d^{1} = min\lbrace d_{A} \; \vert \; A \in Agt \; s.t. \; m_{A} = (d_{A}, \delta_{A}) \rbrace$ and $d^{2} = min\lbrace d_{A} \; \vert \; A \in Agt \; s.t. \; m_{A} = (d_{A}, \delta_{A}) \; \text{with} \; d_{A} > d^{1} \rbrace$. Then for every $A \in Agt$:
+\begin{itemize}
+\item If $m_{A} = (d^{1}, \delta)$, then we set $\lambda_{A} = (r, 1, \delta)$ where $r$ is the region corresponding to valuation $v + d^{1}$.
+\item If $m_{A} = (d^{2}, \delta)$, then we set $\lambda_{A} = (r, p, \delta)$ where $r$ is the region corresponding to valuation $v + d^{2}$, and $p = 2$ if $r$ is time-elapsing and $p = 1$ otherwise.
+\item If $m_{A} = (d_{A}, \delta)$ with $d_{A} > d^{2}$, then we set $\lambda_{A} = (r, p, \delta)$ where $r$ is the region corresponding to valuation $v + d_{A}$, and $p = 3$ if $r$ is time-elapsing and $p = 1$ otherwise.
+\item If $m_{A} = \perp$, then $\lambda_{A} = \perp$.
+\end{itemize}
+
+The above definition of $\lambda_{Agt} = (\lambda_{A})_{A\in Agt}$ is same as in \cite{BBM-concur10,BBM-report}. Clearly, if $m_{A}$ is allowed to $A$ in state $(l, v)$ in $G$, then $\lambda_{A}$ is allowed to $A$ in state $(l, r)$ in $G_{R}$ where $r$ is the region containing $v$, since it corresponds to the same transition played in the correct region.
+
+We now recall the following lemma (and its proof) from \cite{BBM-report}.
+
+\begin{lemma}
+\label{lemma9}
+For every $((l, v), (l', v')) \in Tab((l, v), m_{Agt})$, it holds that:\\
+$((l, r), (l', r')) \in Tab_{R}((l, r), \lambda_{Agt})$ where $r$ and $r'$ are the regions containing $v$ and $v'$ respectively.
+\end{lemma}
+
+\begin{proof}
+As $((l, v), (l', v')) \in Tab((l, v), m_{Agt})$, there is some $B$ such that $m_{B} = (d_{B}, \delta_{B})$ with $d_{B} = min\lbrace d_{A} \; \vert \; A \in Agt \; s.t. \; m_{A} = (d_{A}, \delta_{A}) \rbrace$ and $\delta_{B} = (l, g_{B}, z_{B}, l')$ such that $v' = [z_{B} \leftarrow 0](v + d_{B})$. In this case, we have $\lambda_{B} = (r_{B}, 1, \delta_{B})$ with $v + d_{B} \in r_{B}$ and $r_{B} = min\lbrace r_{A} \; \vert \; A \in Agt \; \text{and} \; \lambda_{A} = (r_{A}, p_{A}, \delta_{A}) \rbrace$. Therefore $((l, r), (l', r')) \in Tab_{R}((l, r), \lambda_{Agt})$ with $r' = [z_{B} \leftarrow 0]r_{B}$ so that $r'$ contains $[z_{B} \leftarrow 0](v + d_{B})$.
+\end{proof}
+
+\begin{lemma}
+\label{lemma10}
+For every region $r'$, there is a valuation $v' \in r'$, such that for every $k \leq \vert Agt \vert$, it holds that:
+\[k-Susp_{G_{R}}(((l, r), (l', r')), \lambda_{Agt}) \subseteq k-Susp_{G}(((l, v), (l', v')), m_{Agt})\]
+\end{lemma}
+
+\begin{proof}
+Let $P \in k-Susp_{G_{R}}(((l, r), (l', r')), \lambda_{Agt})$ and let $\lambda'_{P}$ be an action tuple for coalition $P$ ($\lambda'_{P} = (\lambda'_{B})_{B\in P}$ with $\lambda'_{B} = (r'_{B}, p'_{B}, \delta'_{B})$ for every $B \in P$) such that $((l, r), (l', r')) \in Tab_{R}((l, r), \lambda_{Agt}[P \rightarrow \lambda'_{P}])$.
+
+We have to prove that $P \in k-Susp_{G}(((l, v), (l', v')), m_{Agt})$ for some $v' \in r'$. For this, we need to prove that there exists $v' \in r'$ and an action tuple $m'_{P}$ for coalition $P$ such that $((l, v), (l', v')) \in Tab((l, v), m_{Agt}[P \rightarrow m'_{P}])$. We first define $m'_{P}$. Let $m'_{P} = (m'_{B})_{B\in P}$. For every $B \in P$, we define $m'_{B} = (d'_{B}, \delta'_{B})$ as follows:
+\begin{itemize}
+\item If $r'_{B} < min(\lbrace r_{A} \; \vert \; A \notin P \rbrace \cup \lbrace r'_{A} \; \vert \; A \in P \; \text{and} \; A \neq B \rbrace)$, then $m'_{B} = (f_{1}(v, r'_{B}), \delta'_{B})$.
+\item If $r'_{B} = min(\lbrace r_{A} \; \vert \; A \notin P \rbrace \cup \lbrace r'_{A} \; \vert \; A \in P \; \text{and} \; A \neq B \rbrace)$, then:
+\begin{itemize}
+\item If $p'_{B} < min(\lbrace p_{A} \; \vert \; A \notin P \; \text{and} \; r_{A} = r'_{B} \rbrace \cup \lbrace p'_{A} \; \vert \; A \in P \; \text{and} \; A \neq B \; \text{and} \; r'_{A} = r'_{B} \rbrace)$, then $m'_{B} = (d'_{B}, \delta'_{B})$ such that $v + d'_{B} \in r'_{B}$ and $d'_{B} < min(\lbrace d_{A} \; \vert \; A \notin P \; \text{and} \; r_{A} = r'_{B} \rbrace \cup \lbrace d'_{A} \; \vert \; A \in P \; \text{and} \; A \neq B \; \text{and} \; r'_{A} = r'_{B} \rbrace)$.
+\item If $p'_{B} = min(\lbrace p_{A} \; \vert \; A \notin P \; \text{and} \; r_{A} = r'_{B} \rbrace \cup \lbrace p'_{A} \; \vert \; A \in P \; \text{and} \; A \neq B \; \text{and} \; r'_{A} = r'_{B} \rbrace)$, then $m'_{B} = (d'_{B}, \delta'_{B})$ such that $v + d'_{B} \in r'_{B}$ and $d'_{B} = min(\lbrace d_{A} \; \vert \; A \notin P \; \text{and} \; r_{A} = r'_{B} \rbrace \cup \lbrace d'_{A} \; \vert \; A \in P \; \text{and} \; A \neq B \; \text{and} \; r'_{A} = r'_{B} \rbrace)$.
+\item If $p'_{B} > min(\lbrace p_{A} \; \vert \; A \notin P \; \text{and} \; r_{A} = r'_{B} \rbrace \cup \lbrace p'_{A} \; \vert \; A \in P \; \text{and} \; A \neq B \; \text{and} \; r'_{A} = r'_{B} \rbrace)$, then $m'_{B} = (d'_{B}, \delta'_{B})$ such that $v + d'_{B} \in r'_{B}$ and $d'_{B} > min(\lbrace d_{A} \; \vert \; A \notin P \; \text{and} \; r_{A} = r'_{B} \rbrace \cup \lbrace d'_{A} \; \vert \; A \in P \; \text{and} \; A \neq B \; \text{and} \; r'_{A} = r'_{B} \rbrace)$.
+\end{itemize}
+\item Otherwise $m'_{B} = (f_{p'_{B}}(v, r'_{B}), \delta'_{B})$
+\end{itemize}
+
+It remains to prove that $((l, v), (l', v')) \in Tab((l, v), m_{Agt}[P \rightarrow m'_{P}])$ for some $v' \in r'$. Since $((l, r), (l', r')) \in Tab_{R}((l, r), \lambda_{Agt}[P \rightarrow \lambda'_{P}])$, we have to prove that any player who plays minimal region and index in $\lambda_{Agt}[P \rightarrow \lambda'_{P}]$ also plays shortest delay in $m_{Agt}[P \rightarrow m'_{P}]$. Let the player who plays minimal region and index in $\lambda_{Agt}[P \rightarrow \lambda'_{P}]$ be $C$.
+
+From our definition of action tuple $m'_{P}$, the following equivalence holds for every $B \in P$:
+\[d'_{B} = min\Big(\lbrace d_{A} \; \vert \; A \in Agt \setminus P \; s.t. \; m_{A} = (d_{A}, \delta_{A}) \rbrace \cup \lbrace d'_{A} \; \vert \; A \in P \; s.t. \; m'_{A} = (d'_{A}, \delta'_{A}) \rbrace\Big)\]
+\[\Leftrightarrow\]
+\[r'_{B} = min\Big(\lbrace r_{A} \; \vert \; A \in Agt \setminus P \; s.t. \; \lambda_{A} = (r_{A}, p_{A}, \delta_{A}) \rbrace \cup \lbrace r'_{A} \; \vert \; A \in P \; s.t. \; \lambda'_{A} = (r'_{A}, p'_{A}, \delta'_{A}) \rbrace\Big)\]
+\[\text{and}\]
+\[p'_{B} = min\Big(\lbrace p_{A} \; \vert \; A \in Agt \setminus P \; s.t. \; \lambda_{A} = (r'_{B}, p_{A}, \delta_{A}) \rbrace \cup \lbrace p'_{A} \; \vert \; A \in P \; s.t. \; \lambda'_{A} = (r'_{B}, p'_{A}, \delta'_{A}) \rbrace\Big)\]
+
+Now, if some $C \in P$ plays minimal region and index in $\lambda_{Agt}[P \rightarrow \lambda'_{P}]$, then from the above equivalence, $C$ also plays shortest delay in $m_{Agt}[P \rightarrow m'_{P}]$ and the result follows.
+
+And, if some $C \notin P$ plays minimal region and index in $\lambda_{Agt}[P \rightarrow \lambda'_{P}]$, then by construction of $\lambda_{Agt}$, $p_{C} = 1$ and $d_{C} = d^{1}$. Moreover, for every $B \in P$, $r'_{B}$ is either $r_{C}$ or a later region. In both cases, $d'_{B}$ is larger than or equal to $d^{1}$. Therefore $C$ also plays shortest delay in $m_{Agt}[P \rightarrow m'_{P}]$ and the result follows.
+\end{proof}
+
+From Lemma \ref{lemma9} and Lemma \ref{lemma10}, the second condition for the relation $\backsim_{k}$ (as given in Lemma \ref{lemma8}) between states of $G$ and states of $G_{R}$ holds. Hence we have shown that, for every $k \leq \vert Agt \vert$, there is a binary relation $\backsim_{k}$ (as defined in Lemma \ref{lemma8}) between states of $G$ and states of $G_{R}$ such that $(l, v) \backsim_{k} (l, r)$ if $r$ is the region containing $v$.
+
+\textbf{\textit{From region game $G_{R}$ to timed game $G$}}: We now show that for every $k \leq \vert Agt \vert$, there is a binary relation $\backsim_{k}$ (as defined in Lemma \ref{lemma8}) between states of $G_{R}$ and states of $G$ such that $(l, r) \backsim_{k} (l, v)$ if $v$ is contained in the region $r$. By definition of $\Omega$ in $G$ and $\Omega_{R}$ in $G_{R}$, the first condition for the relation $\backsim_{k}$ as given in Lemma \ref{lemma8} holds.
+
+Now, consider an action tuple (a move) $\alpha_{Agt} = (\alpha_{A})_{A\in Agt}$ from state $(l, r)$ in $G_{R}$. From state $(l, v)$ in $G$ (s.t. $v$ is contained in $r$), we define the action tuple $(\mu_{A})_{A\in Agt} = (\mu((l, v), (\alpha_{A})))_{A\in Agt}$ in $G$ as follows:
+\begin{itemize}
+\item If $\alpha_{A} = \perp$, then $\mu((l, v), (\alpha_{A})) = \perp$.
+\item If $\alpha_{A} = (r_{A}, p_{A}, \delta_{A})$, then we let $\mu((l, v), (\alpha_{A})) = (f_{p_{A}}(v, r_{A}), \delta_{A})$.
+\end{itemize}
+
+The above definition of $\mu_{Agt} = (\mu_{A})_{A\in Agt}$ is same as in \cite{BBM-concur10,BBM-report}. Again, if $\alpha_{A}$ is allowed to player $A$ in state $(l, r)$ in $G_{R}$, then $\mu_{A}$ is allowed to $A$ in state $(l, v)$ in $G$, since it corresponds to playing the same transition in the same region.
+
+We now recall the following lemma (and its proof) from \cite{BBM-report}.
+
+\begin{lemma}
+\label{lemma11}
+For any transition $((l, r), (l', r')) \in Tab_{R}((l, r), \alpha_{Agt})$, there exists a transition $((l, v), (l', v')) \in Tab((l, v), \mu_{Agt})$ where $v$ and $v'$ are contained in regions $r$ and $r'$ respectively.
+\end{lemma}
+
+\begin{proof}
+Since $((l, r), (l', r')) \in Tab_{R}((l, r), \alpha_{Agt})$, there is a player $B$ such that $r_{B} = min\lbrace r_{A} \; \vert \; A \in Agt \; s.t. \; \alpha_{A} = (r_{A}, p_{A}, \delta_{A}) \rbrace$ and $p_{B} = min\lbrace p_{A} \; \vert \; A \in Agt \; s.t. \; \alpha_{A} = (r_{B}, p_{A}, \delta_{A}) \rbrace$ and $\delta_{B} = (l, g_{B}, z_{B}, l')$ and $r' = [z_{B} \leftarrow 0]r_{B}$. Therefore, $f_{p_{B}}(v, r_{B}) = min\lbrace f_{p_{A}}(v, r_{A}) \; \vert \; A \in Agt \; s.t. \; \alpha_{A} = (r_{A}, p_{A}, \delta_{A}) \rbrace$ and $v' = [z_{B} \leftarrow 0](v + f_{p_{B}}(v, r_{B}))$ is such that $(l', v') \in Tab((l, v), \mu_{Agt})$ with $v' \in r'$.
+\end{proof}
+
+\begin{lemma}
+\label{lemma12}
+For any $v'$, writing $r'$ for the region containing $v'$, we have that, for every $k \leq \vert Agt \vert$:
+\[k-Susp_{G}(((l, v), (l', v')), \mu_{Agt}) \subseteq k-Susp_{G_{R}}(((l, r), (l', r')), \alpha_{Agt})\]
+\end{lemma}
+
+\begin{proof}
+Let $P \in k-Susp_{G}(((l, v), (l', v')), \mu_{Agt})$ and let $\mu'_{P}$ be an action tuple for coalition $P$ ($\mu'_{P} = (\mu'_{B})_{B\in P}$ with $\mu'_{B} = (d'_{B}, \delta'_{B})$ for every $B \in P$) such that $((l, v), (l', v')) \in Tab((l, v), \mu_{Agt}[P \rightarrow \mu'_{P}])$.
+
+We have to prove that $P \in k-Susp_{G_{R}}(((l, r), (l', r')), \alpha_{Agt})$. For this, we need to prove that there exists an action tuple $\alpha'_{P}$ for coalition $P$ such that $((l, r), (l', r')) \in Tab((l, r), \alpha_{Agt}[P \rightarrow \alpha'_{P}])$. Let us define a value $d^{B}_{min}$ as:
+
+\[d^{B}_{min} = min\Big( \lbrace d_{A} \; \vert \; A \in Agt \setminus P \; s.t. \; \mu_{A} = (d_{A}, \delta_{A}) \rbrace \cup \lbrace d'_{A} \; \vert \; A \in P \; s.t. \; \mu'_{A} = (d'_{A}, \delta'_{A}) \rbrace\Big)\]
+
+Now we define $\alpha'_{P} = (\alpha'_{B})_{B\in P}$ as follows: for every $B \in P$, we let $\alpha'_{B} = (r'_{B}, p'_{B}, \delta'_{B})$ where $r'_{B}$ is the region associated to $v + d'_{B}$ and $p'_{B} = 1$ if $r'_{B}$ is not time-elapsing or $d'_{B} = d^{B}_{min}$ and $p'_{B} = 3$ otherwise.
+
+It remains to prove that $((l, r), (l', r')) \in Tab((l, r), \alpha_{Agt}[P \rightarrow \alpha'_{P}])$. Since $((l, v), (l', v')) \in Tab((l, v), \mu_{Agt}[P \rightarrow \mu'_{P}])$, we need to prove that the player(s) playing minimal delay in $\mu_{Agt}[P \rightarrow \mu'_{P}]$ also play(s) minimal region and index in $\alpha_{Agt}[P \rightarrow \alpha'_{P}]$. Let the player playing minimal delay in $\mu_{Agt}[P \rightarrow \mu'_{P}]$ be $C$.
+
+If $C \in P$, it is the case that $d'_{C} \leq d^{1}$, then if $C$ plays a region not containing $v + d^{1}$, then $d'_{C} < d^{1}$ and $C$ is the only player proposing minimal delay in $\mu_{Agt}[P \rightarrow \mu'_{P}]$ and minimal region and index in $\alpha_{Agt}[P \rightarrow \alpha'_{P}]$ and the result follows. If $C$ plays in a region containing $v + d^{1}$, then again any player (including $C$) proposing minimal delay in $\mu_{Agt}[P \rightarrow \mu'_{P}]$ also proposes minimal region and index in $\alpha_{Agt}[P \rightarrow \alpha'_{P}]$ and the result follows.
+
+If $C \notin P$, then also any player proposing minimal delay in $\mu_{Agt}[P \rightarrow \mu'_{P}]$ also proposes minimal region and index in $\alpha_{Agt}[P \rightarrow \alpha'_{P}]$ and the result follows.
+\end{proof}
+
+From Lemma \ref{lemma11} and Lemma \ref{lemma12}, the second condition for the relation $\backsim_{k}$ (as given in Lemma \ref{lemma8}) between states of $G_{R}$ and states of $G$ holds. Hence we have shown that, for every $k \leq \vert Agt \vert$, there is a binary relation $\backsim_{k}$ (as defined in Lemma \ref{lemma8}) between states of $G_{R}$ and states of $G$ such that $(l, r) \backsim_{k} (l, v)$ if $v$ is contained in the region $r$.
+
+Hence, from Lemmas \ref{lemma8}, \ref{lemma9}, \ref{lemma10}, \ref{lemma11} and \ref{lemma12}, we have proved that for every $k \leq \vert Agt \vert$, there is a binary relation $\backsim_{k}$ (as defined in Lemma \ref{lemma8}), such that the the relation $\backsim_{k}$ exists between states of $G$ and states of $G_{R}$ and the relation $\backsim_{k}$ also exists between states of $G_{R}$ and states of $G$ (i.e., it is the case that for every state $(l, v)$ in $G$ and every state $(l, r)$ in $G_{R}$, if $r$ is the region containing $v$ then $(l, v) \backsim_{k} (l, r)$ and $(l, r) \backsim_{k} (l, v)$). Hence the timed game $G$ and its associated region game $G_{R}$ simulate each other in the sense of Lemma \ref{lemma8} (via relation $\backsim_{k}$ for every $k \leq \vert Agt \vert$).
+
+\begin{theorem}
+\label{theroem13}
+Let $G$ be a multi-player timed concurrent reachability game and let $G_{R}$ be its associated region game. Then for every $k \leq \vert Agt \vert$, there is a \textit{k-resilient} pseudo-Nash equilibrium in $G$ from $(s, \textbf{0})$ if and only if there is a \textit{k-resilient} pseudo-Nash equilibrium in $G_{R}$ from $(s, [\textbf{0}])$ where $[\textbf{0}]$ is the region associated to valuation $\textbf{0}$. Furthermore, this equivalence is constructive.
+\end{theorem}
+
+\begin{proof}
+We have proved earlier that the timed game $G$ and its associated region game $G_{R}$ simulate each other in the sense of Lemma \ref{lemma8} via relation $\backsim_{k}$ for every $k \leq \vert Agt \vert$. In particular, we have proved earlier that for every $k \leq \vert Agt \vert$, there is a binary relation $\backsim_{k}$ (as defined in Lemma \ref{lemma8}) such that for every state $(l, v)$ in $G$ and every state $(l, r)$ in $G_{R}$, if $r$ is the region containing $v$ then $(l, v) \backsim_{k} (l, r)$ and $(l, r) \backsim_{k} (l, v)$. Now from Lemma \ref{lemma8}, it can be inferred that for every $P \subseteq Agt$ and every $X \subseteq 2^{Agt}_{k}$ such that $P \bigcap \left( \bigcup \limits_{W \in X}W \right) = P$ and for every state $(l, v)$ in $G$ and corresponding state $(l, r)$ in $G_{R}$ such that $r$ is the region containing $v$, the following two results hold:
+\begin{enumerate}
+\item $(l, v) \in k-Rep_{G}(P, X) \Leftrightarrow (l, r) \in k-Rep_{G_{R}}(P, X)$.
+\item $((l, v), (l', v')) \in Edg_{k-Rep}^{G} \Leftrightarrow ((l, r), (l', r')) \in Edg_{k-Rep}^{G_{R}}$ where $r'$ is the region containing $v'$ and $Edg_{k-Rep}^{G}$ and $Edg_{k-Rep}^{G_{R}}$ are the set of edges in the transition systems $k-S_{G}(P, X)$ and $k-S_{G_{R}}(P, X)$ respectively.
+\end{enumerate}
+
+It follows that for every $P \subseteq Agt$, there is a path $\rho$ in $k-S_{G}(P, 2^{Agt}_{k})$ if and only if there is a corresponding path $\rho'$ in $k-S_{G_{R}}(P, 2^{Agt}_{k})$ which visits exactly the same regions visited by $\rho$.
+
+Therefore, there is an infinite path $\rho$ in $k-S_{G}(P, 2^{Agt}_{k})$ from $(s, \textbf{0})$ which visits $\Omega(A)$ for every $A \notin P$, if and only if, there is an infinite path $\rho'$ in $k-S_{G_{R}}(P, 2^{Agt}_{k})$ from $(s, [\textbf{0}])$ which visits $\Omega_{R}(A)$ for every $A \notin P$.
+
+From Theorem \ref{theorem6}, we conclude that there is a \textit{k-resilient} pseudo-Nash equilibrium in $G$ from $(s, \textbf{0})$ if and only if there is a \textit{k-resilient} pseudo-Nash equilibrium in $G_{R}$ from $(s, [\textbf{0}])$. This equivalence is constructive because given the strategy profile for one game, the strategy profile for the other game can be computed using the translations $\lambda$ (which maps moves in $G$ to equivalent moves in $G_{R}$) or $\mu$ (which maps moves in $G_{R}$ to equivalent moves in $G$) as the case may be. This computation is possible because for every history in $G$, there is an equivalent projection of that history in $G_{R}$ which visits exactly the same regions.
+\end{proof}
+
+By Theorem \ref{theroem13}, we can infer that the translation of a multi-player timed concurrent reachability game to its associated region game preserves a \textit{k-resilient} pseudo-Nash equilibrium (if one exists). Hence, in order to check the existence of \textit{k-resilient} pseudo-Nash equilibrium in a multi-player timed concurrent reachability game, we can translate the timed game to its associated region game and then check the existence of \textit{k-resilient} pseudo-Nash equilibrium in the region game. 
+
+As the region games in this case are finite non-deterministic multi-player concurrent reachability games, we can apply Algorithm \ref{algorithm1} to check the existence of \textit{k-resilient} pseudo-Nash equilibrium in the region games. Hence, in order to check the existence of \textit{k-resilient} pseudo-Nash equilibrium in a multi-player timed concurrent reachability game, we can first translate the timed game to its associated region game and then we can apply Algorithm \ref{algorithm1} to check the existence of \textit{k-resilient} pseudo-Nash equilibrium in the region game and report its output.
+
+The translation of a multi-player timed concurrent reachability game to its associated region game results in an exponential blow-up in the number of states (w.r.t the number of locations and clocks in the timed game) and an exponential blow-up in the size of transition table. Recall that Algorithm \ref{algorithm1} runs in time exponential with respect to the number of states and the size of transition table but doubly exponential with respect to the number of agents. Although, the translation of a multi-player timed concurrent reachability game to its associated region game results in an exponential blow-up in the number of states and the size of transition table, the number of agents is unchanged (as a timed game and its associated region game have the same set of agents). Therefore, even after the exponential blow-up in the number of states and the size of transition table, the algorithm runs in time doubly exponential with respect to the number of states, size of transition table and the number of agents. Hence the algorithm is doubly exponential with respect to the size of input and is still in 2-EXPTIME.
+
+In case a \textit{k-resilient} pseudo-Nash equilibrium exists, it can be computed in the region game using the generic method described in Theorem \ref{theorem7} and its proof. The \textit{k-resilient} pseudo-Nash equilibrium in the corresponding timed game can then be computed using the translation $\mu$ (which maps moves in the region game to equivalent moves in the timed game). Recall form Theorem \ref{theroem13} that the equivalence of existence of \textit{k-resilient} pseudo-Nash equilibrium in a timed game and its associated region game is constructive. Hence this computation is possible as for every history in the timed game, there is an equivalent projection of that history in the region game which visits exactly the same regions.

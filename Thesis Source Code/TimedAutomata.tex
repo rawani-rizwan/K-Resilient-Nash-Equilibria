@@ -1,0 +1,229 @@
+\chapter{The Theory of Timed Automata}
+In this appendix, we briefly describe the theory of timed automata required for the proper understanding of our work in timed games (discussed in Chapter 3). The contents of this appendix are taken from \cite{1}.
+
+For formal specification and verification of real time systems that involve timing constraints (such as flight control systems installed in an aeroplane), we need to include the timing constraints while modelling the system specification. If a system desires some properties that include timing constraints, we should be able to include the concept of `time' in the system specification. In order to verify that the system has such desired properties (that include timing constraints), the system model must be able to capture such properties completely in its specification. For this purpose, \citet{1} define a concept of timed automata. Timed automata are a natural extension of finite automata in the sense that transitions in timed automata not just read a symbol (over an alphabet) but also take into account the `time' at which a symbol is read. If a symbol represents an event, then transitions in timed automata depend not only on the occurrence of an event, but also on the time of occurrence of an event. Thus, timed automata are able to capture properties that involve timing constraints and hence are useful in formal specification and verification of real time systems.
+
+\section{Timed Automata}
+
+We begin by recalling the the definition of time sequences from \cite{1}.
+
+\begin{definition}
+A time sequence $\tau = \tau_{1}\tau_{2}\ldots$ is an infinite sequence of time values $\tau_{i} \in \mathbb{R}_{+}$ satisfying the following properties:
+\begin{enumerate}
+\item \textit{Monotonicity:} $\tau$ increases strictly monotonically, i.e., $\tau_{i} < \tau_{i+1}$ for every $i \geq 1$.
+\item \textit{Progress:} For every $t \in \mathbb{R}_{+}$, there is some $i \geq 1$ such that $\tau_{i} > t$.
+\end{enumerate}
+\end{definition}
+
+We now recall the definition of timed words from \cite{1}.
+
+\begin{definition}
+A timed word over an alphabet $\Sigma$ is a pair $(\sigma, \tau)$ where $\sigma = \sigma_{1}\sigma_{2}\ldots$ is an infinite word over $\Sigma$ and $\tau = \tau_{1}\tau_{2}\ldots$ is a time sequence. A timed language over $\Sigma$ is a set of timed words over $\Sigma$.
+\end{definition}
+
+If a timed word $(\sigma, \tau)$ is viewed as an input to an automaton, it presents the symbol $\sigma_{i}$ at time $\tau_{i}$. If each symbol $\sigma_{i}$ is interpreted to denote the occurrence of an event, then the corresponding component $\tau_{i}$ is interpreted as the time of occurrence of $\sigma_{i}$. Sometimes it may be required to allow multiple events to occur simultaneously, i.e., it may be required to allow the same time value to be associated with multiple consecutive events in the sequence. This may be achieved by using a slightly different definition of timed words requiring a time sequence to increase only monotonically (i.e., $\tau_{i} \leq \tau_{i+1}$ for every $i \geq 1$) instead of strictly monotonically. \citet{1} prove that all their results hold in this alternative model also.
+
+\textit{\textbf{Transition tables with timing constraints:}} When an automaton makes a state transition, the choice of the next state depends on the input symbol read. In case of timed transition tables, we want this choice to also depend upon the time at which the input symbol is read relative to the times of previously read symbols. For this purpose, \citet{1} associate a finite set of real valued clocks to timed transition tables. A clock can be reset to zero simultaneously with any transition. At any instant, the reading of a clock equals the time elapsed since the last time it was reset. With each transition, we can associate a clock constraint and require that the transition may be taken only if the current values of the clocks satisfy this constraint.
+
+We now recall the concept clock valuations as defined in \cite{1,BBM-concur10,BBM-report}.
+
+\begin{definition}
+Consider a finite set of clocks $\chi$. A valuation $v$ over the finite set of clocks $\chi$ is an application $v: \chi \rightarrow \mathbb{R}_{+}$ that assigns to each clock $x \in \chi$, a positive real number that signifies the units of time since the clock $x$ was last reset.
+\end{definition}
+
+If $v$ is a valuation over the set of clocks $\chi$ and $t \in \mathbb{R}_{+}$, then $v + t$ is the valuation that assigns to each $x \in \chi$, the value $v(x) + t$. Also, $t \cdot v$ is the valuation that assigns to each $x \in \chi$, the value $t \cdot v(x)$.
+
+If $v$ is a valuation over the set of clocks $\chi$ and $\varphi \subseteq \chi$, then $[\varphi \leftarrow t]v$ is the valuation that assigns the value $t$ to each $y \in \varphi$ and the value $v(x)$ to each $x \in \chi \setminus \varphi$.
+
+We now recall the concept of clock constraints from \cite{1,BBM-concur10,BBM-report}.
+
+\begin{definition}
+A clock constraint over the set of clocks $\chi$ is a formula built on the grammar $\zeta(\chi) \ni g ::= x \backsim c \; \vert \; g \wedge g$, where $x$ ranges over $\chi$, $\backsim \in \lbrace <, \leq, =, \geq, > \rbrace$ and $c$ is an integer.
+\end{definition}
+
+A valuation $v$ over a set of clocks $\chi$ satisfies a clock constraint $g$ over $\chi$ if on assigning the values $v(x)$ to each $x \in \chi$, the clock constraint $g$ evaluates to true. If a valuation $v$ satisfies a clock constraint $g$, we write it as $v \models g$.
+
+We now recall the definition of timed transition tables from \cite{1}.
+
+\begin{definition}
+A timed transition table $T$ is a 5-tuple, $T = (\Sigma, S, S_{0}, \chi, E)$ where:
+\begin{itemize}
+\item $\Sigma$ is a finite alphabet.
+\item $S$ is a finite set of states.
+\item $S_{0} \subseteq S$ is a set of start states.
+\item $\chi$ is a finite set of clocks.
+\item $E \subseteq S \times S \times \Sigma \times 2^{\chi} \times \zeta(\chi)$ gives the set of transitions. An edge $(s, s', a, z, g)$ represents a transition from state $s$ to state $s'$ on input symbol $a$. The set $z \subseteq \chi$ gives the clocks to be reset with this transition, and $g$ is a clock constraint over $\chi$ that must be true while this transition is taken.
+\end{itemize}
+\end{definition}
+
+Given a timed word $(\sigma, \tau)$, the timed transition table $T$ starts in one of its start states at time $0$ with all its clocks initialized to $0$. As time advances, the values of all the clocks change reflecting the elapsed time. At time $\tau_{i}$, $T$ changes from state $s$ to state $s'$ using some transition of the form $(s, s', \sigma_{i}, z, g)$ reading input $\sigma_{i}$, if the current valuation of the clocks satisfies $g$. With this transition the clocks in $z$ are reset to $0$ and thus start counting time with respect to the time of occurrence of this transition.
+
+We now recall the definition of runs in timed transition tables from \cite{1}.
+
+\begin{definition}
+A run $r$, denoted by $(\overline{s}, \overline{v})$, of a timed transition table $T = (\Sigma, S, S_{0}, \chi, E)$ over a timed word $(\sigma, \tau)$ is an infinite sequence of the form:
+\[r: (s_{0}, v_{0}) \overset{\sigma_{1}}{\underset{\tau_{1}}{\longrightarrow}} (s_{1}, v_{1}) \overset{\sigma_{2}}{\underset{\tau_{2}}{\longrightarrow}} (s_{2}, v_{2}) \overset{\sigma_{3}}{\underset{\tau_{3}}{\longrightarrow}} \cdots \]
+with $s_{i} \in S$ and $v_{i} \in \mathbb{R}_{+}^{\chi}$ is a valuation over $\chi$ for every $i \geq 0$, satisfying the following requirements:
+\begin{itemize}
+\item \textit{Initiation:} $s_{0} \in S_{0}$ and $v_{0}(x) = 0$ for every clock $x \in \chi$.
+\item \textit{Consecution:} For every $i \geq 1$, there is an edge $E$ of the form $(s_{i-1}, s_{i}, \sigma_{i}, z_{i}, g_{i})$ such that $(v_{i-1} + \tau_{i} - \tau_{i-1})$ satisfies $g_{i}$ and $v_{i}$ equals $[z_{i} \leftarrow 0](v_{i-1} + \tau_{i} - \tau_{i-1})$.
+\end{itemize}
+\end{definition}
+
+For a run $r$, the set $inf(r)$ consists of those states $s \in S$ such that $s = s_{i}$ for infinitely many $i \geq 0$ (i.e., the set $inf(r)$ consists of those states that occur infinitely often in the run $r$).
+
+We now recall the definition of timed B{\"u}chi automata from \cite{1}.
+
+\begin{definition}
+A timed B{\"u}chi automaton is a 6-tuple, $M = (\Sigma, S, S_{0}, \chi, E, F)$ where $(\Sigma, S, S_{0}, \chi, E)$ is a timed transition table and $F \subseteq S$ is a set of accepting states.
+\end{definition}
+
+A run $r = (\overline{s}, \overline{v})$ of a timed B{\"u}chi automaton over a timed word $(\sigma, \tau)$ is an accepting run iff $inf(r) \cap F \neq \emptyset$.
+
+For a timed B{\"u}chi automaton $M$, the language $L(M)$ of timed words it accepts is defined to be the set $\lbrace (\sigma, \tau) \; \vert \; M \; \text{has an accepting run over} \; (\sigma, \tau) \rbrace$.
+
+We now recall the definition of timed regular languages from \cite{1}.
+
+\begin{definition}
+A timed language $L$ is a timed regular language iff $L = L(M)$ for some timed B{\"u}chi automaton $M$.
+\end{definition}
+
+We now recall the following theorem from \cite{1}.
+
+\begin{theorem}
+The class of timed regular languages is closed under finite union and intersection.
+\end{theorem}
+
+We now recall the definition of timed Muller automata from \cite{1}.
+
+\begin{definition}
+A timed Muller automaton is a 6-tuple, $M = (\Sigma, S, S_{0}, \chi, E, \mathbb{F})$ where $(\Sigma, S, S_{0}, \chi, E)$ is a timed transition table and $\mathbb{F} \subseteq 2^{S}$ specifies an acceptance family.
+\end{definition}
+
+A run $r = (\overline{s}, \overline{v})$ of a timed Muller automaton over a timed word $(\sigma, \tau)$ is an accepting run iff $inf(r) \in \mathbb{F}$.
+
+For a timed Muller automaton $M$, the language $L(M)$ of timed words it accepts is defined to be the set $\lbrace (\sigma, \tau) \; \vert \; M \; \text{has an accepting run over} \; (\sigma, \tau) \rbrace$.
+
+We now recall the following theorem from \cite{1}.
+
+\begin{theorem}
+A timed language is accepted by some timed B{\"u}chi automaton iff it is accepted by some timed Muller automaton.
+\end{theorem}
+
+\section{Clock Regions}
+
+At every point in time, the future behaviour of a timed transition table is determined by its state and the current valuation of its clocks. This motivates the following definition of extended states in timed transition tables \cite{1}.
+
+\begin{definition}
+For a timed transition table $T = (\Sigma, S, S_{0}, \chi, E)$, an extended state is a pair $(s, v)$ where $s \in S$ and $v$ is valuation over the set of clocks $\chi$.
+\end{definition}
+
+The number of such extended states is uncountable. But if two extended states with the same $T$-state agree on the integral parts of all clock values and also agree on the ordering of the fractional parts of all clock values, then the runs starting from the two extended states are very similar. This is because integral parts of the clock values decide whether or not a particular clock constraint is met, whereas the ordering of fractional parts decides which clock will change its integral part first. The integral parts of clock values can get arbitrarily large. But if a clock $x$ is never compared with a constant greater than $c$, then its actual value once it exceeds $c$, is of no consequence in deciding the allowed paths.
+
+Now we formalize this notion as in \cite{1}. For every $t \in \mathbb{R}_{+}$, let $\lfloor  t \rfloor$ denote the integral part of $t$ and let $fract(t)$ denote the fractional part of $t$, i.e., $t = \lfloor t \rfloor + fract(t)$. Assume that every clock in $\chi$ appears in some clock constraint.
+
+We now recall the definition of the equivalence relation $\backsim$ over the set of all the clock valuations over $\chi$ from \cite{1}.
+
+\begin{definition}
+Let $T = (\Sigma, S, S_{0}, \chi, E)$ be a timed transition table. For every $x \in \chi$, let $c_{x}$ be the largest integer $c$ such that $(x \leq c)$ or $(x \geq c)$ is a sub-formula of some clock constraint appearing in $E$. The equivalence relation $\backsim$ is defined over the set of all clock valuations over $\chi$; for clock valuations $v$ and $v'$, $v \backsim v'$ iff the following conditions hold:
+\begin{enumerate}
+\item For every $x \in \chi$, either $\lfloor v(x) \rfloor$ and $\lfloor v'(x) \rfloor$ are same, or both $v(x)$ and $v'(x)$ are greater than $c_{x}$.
+\item For every $x, \; y \in \chi$ with $v(x) \leq c_{x}$ and $v(y) \leq c_{y}$, $fract(v(x)) \leq fract(v(y))$ iff $fract(v'(x)) \leq fract(v'(y))$.
+\item For every $x \in \chi$ with $v(x) \leq c_{x}$, $fract(v(x)) = 0$ iff $fract(v'(x)) = 0$.
+\end{enumerate}
+\end{definition}
+
+A clock region for $T$ is an equivalence class of clock valuations induced by $\backsim$. As in \cite{1}, we use the notation $[v]$ to denote the clock region to which $v$ belongs. Each clock region can be uniquely characterized by a finite set of clock constraints it satisfies.
+
+Note that there are only finite number of regions. Also note that for a clock constraint $g$ of $T$, if $v \backsim v'$, then $v$ satisfies $g$ iff $v'$ satisfies $g$. We say that a clock region $\alpha$ satisfies a clock constraint $g$ iff every $v \in \alpha$ satisfies $g$. Each region can be represented by specifying:
+\begin{enumerate}
+\item For every clock $x \in \chi$, one clock constraint from the set:
+\[\lbrace x = c \; \vert \; c = 0, 1, \ldots, c_{x} \rbrace \cup \lbrace c - 1 < x < c \; \vert \; c = 1, \ldots, c_{x} \rbrace \cup \lbrace x > c_{x} \rbrace\]
+\item For every pair of clocks $x$ and $y$ such that $c - 1 < x < c$ and $d - 1 < y < d$ appear in (1) above for some $c$ and $d$, whether $fract(x)$ is less than, equal to, or greater than $fract(y)$.
+\end{enumerate}
+
+We now recall the following lemma from \cite{1}.
+
+\begin{lemma}
+The number of clock regions for a timed transition table $T$ is finite and is bounded exponentially with respect to the number of clocks and the length of clock constraints of $T$.
+\end{lemma}
+
+\section{Region Automata}
+
+Consider a timed transition table $T = (\Sigma, S, S_{0}, \chi, E)$. We are interested in constructing a (untimed) transition table whose paths mimic the runs of $T$ in a certain way. As in \cite{1}, we denote this desired transition table by $R(T)$, the region automaton of $T$. A state of $R(T)$ records the state of the timed transition table $T$ and the equivalence class of the current clock valuation. The state of $R(T)$ is of the form $(s, \alpha)$ with $s \in S$ and $\alpha$ is a clock region. The intended interpretation is that whenever the extended state of $T$ is $(s, v)$, the state of $R(T)$ is $(s, [v])$. The region automaton starts in some state $(s_{o}, [v_{0}])$ where $s_{0}$ is a start state of $T$ and the clock valuation $v_{0}$ assigns $0$ to every clock. The transition relation of $R(T)$ is defined so that the intended simulation is obeyed. It has an edge from $(s, \alpha)$ to $(s', \alpha')$ labelled with $a$ iff $T$ in state $s$ with clock valuation $v \in \alpha$ can make a transition on $a$ to the extended state $(s', v')$ for some $v' \in \alpha'$. The edge relation can be conveniently defined using a time-successor relation over the clock regions. We now recall the definition of time-successor relation over the set of clock regions from \cite{1}.
+
+\begin{definition}
+A clock region $\alpha'$ is a time-successor of a clock region $\alpha$ iff for every $v \in \alpha$, there exists $t \in \mathbb{R}_{+}$ such that $v + t \in \alpha'$.
+\end{definition}
+
+Intuitively, the time-successors of a clock region $\alpha$ are the clock regions that will be visited by a clock valuation $v \in \alpha$ as time progresses. The set of all the time-successors of a clock region $\alpha$ is denoted by $Succ(\alpha)$. If $\alpha'$ is a time-successor of $\alpha$, we write it as $\alpha' \in Succ(\alpha)$.
+
+Let $T = (\Sigma, S, S_{0}, \chi, E)$ be a timed transition table. For every $x \in \chi$, let $c_{x}$ be the largest integer $c$ such that $(x \leq c)$ or $(x \geq c)$ is a sub-formula of some clock constraint appearing in $E$. Given a clock region $\alpha$, we now recall the method of computing the set of all the time-successors of $\alpha$ ($Succ(\alpha)$) form \cite{1}. First observe that the time-successor relation is a transitive relation. Now consider different cases:
+\begin{enumerate}
+\item First suppose that $\alpha$ satisfies the constraint $(x > c_{x})$ for every clock $x \in \chi$. In this case, the only time successor of $\alpha$ is $\alpha$ itself.
+\item Now suppose that the set $\chi_{0}$ of clocks $x$ such that $\alpha$ satisfies the constraint $(x = c)$ for some $c \leq c_{x}$ is non-empty. In this case, as time progresses, the fractional parts of the clocks in $\chi_{0}$ become non-zero, and the clock region changes immediately. In this case the time-successors of $\alpha$ are same as the time-successors of clock region $\beta$ specified as below:
+\begin{enumerate}
+\item For $x \in \chi_{0}$, if $\alpha$ satisfies $(x = c_{x})$ then $\beta$ satisfies $(x > c_{x})$, otherwise if $\alpha$ satisfies $(x = c)$ for $c < c_{x}$, then $\beta$ satisfies $(c < x < c + 1)$. For $x \notin \chi_{0}$, the constraint in $\beta$ is same as that in $\alpha$.
+\item For clocks $x$ and $y$ such that $x < c_{x}$ and $y < c_{y}$ hold in $\alpha$, the ordering relationship in $\beta$ between their fractional parts is same as that in $\alpha$.
+\end{enumerate}
+\item If both the above cases do not apply, then let $\chi_{0}$ be the set of clocks $x$ for which $\alpha$ does not satisfy $(x > c_{x})$ and which have the maximal fractional part (i.e., for all clocks $y$ for which $\alpha$ does not satisfy $(y > c_{y})$, $fract(y) \leq fract(x)$ is a constraint of $\alpha$). In this case, as the time progresses, the clocks in $\chi_{0}$ assume integer values. Let $\beta$ be the clock region specified by:
+\begin{enumerate}
+\item For $x \in \chi_{0}$, if $\alpha$ satisfies $(c - 1 < x < c)$ then $\beta$ satisfies $(x = c)$. For $x \notin \chi_{0}$, the constraint in $\beta$ is same as that in $\alpha$.
+\item For clocks $x$ and $y$ such that $(c - 1 < x < c)$ and $(d - 1 < y < d)$ appear in (a) above, the ordering relationship in $\beta$ between their fractional parts is same as that in $\alpha$.
+\end{enumerate}
+In this case, the time-successors of $\alpha$ include $\alpha$, $\beta$ and all the time-successors of $\beta$.
+\end{enumerate}
+
+A region $\alpha$ is time elapsing if it is a time-successor of itself otherwise it is non-time elapsing, i.e., if $\alpha \in Succ(\alpha)$ then $\alpha$ is time elapsing otherwise $\alpha$ is non-time elapsing.
+
+We now recall the definition of region automata from \cite{1}.
+
+\begin{definition}
+For a timed transition table $T = (\Sigma, S, S_{0}, \chi, E)$, the corresponding region automaton $R(T)$ is a transition table over the alphabet $\Sigma$.
+\begin{itemize}
+\item The states of $R(T)$ are of the form $(s, \alpha)$ where $s \in S$ and $\alpha$ is a clock region.
+\item The initial states are of the form $(s_{0}, [v_{0}])$ where $s_{0} \in S_{0}$ and $v_{0}(x) = 0$ for every $x \in \chi$.
+\item $R(T)$ has an edge $((s, \alpha), (s', \alpha'), a)$ iff there is an edge $(s, s', a, z, g) \in E$ and a region $\alpha''$ such that:
+\begin{itemize}
+\item $\alpha''$ is a time-successor of $\alpha$.
+\item $\alpha''$ satisfies $g$.
+\item $\alpha' = [z \leftarrow 0] \alpha''$
+\end{itemize}
+\end{itemize}
+\end{definition}
+
+We now recall the concept of projection of a run $r$ in $T$ from \cite{1}.
+
+\begin{definition}
+For a run $r = (\overline{s}, \overline{v})$ of $T$ over the timed word $(\sigma, \tau)$ of the form:
+\[r: (s_{0}, v_{0}) \overset{\sigma_{1}}{\underset{\tau_{1}}{\longrightarrow}} (s_{1}, v_{1}) \overset{\sigma_{2}}{\underset{\tau_{2}}{\longrightarrow}} (s_{2}, v_{2}) \overset{\sigma_{3}}{\underset{\tau_{3}}{\longrightarrow}} \cdots \]
+define its projection $[r] = (\overline{s}, [\overline{v}])$ to be the sequence:
+\[[r]: (s_{0}, [v_{0}]) \overset{\sigma_{1}}{\longrightarrow} (s_{1}, [v_{1}]) \overset{\sigma_{2}}{\longrightarrow} (s_{2}, [v_{2}]) \overset{\sigma_{3}}{\longrightarrow} \cdots \]
+\end{definition}
+
+From the definition of the edge relation for $R(T)$, it follows that $[r]$ is a run of $R(T)$ over $\sigma$. Since time progresses without bound along $r$, every clock $x \in \chi$ is either reset infinitely often or (from a certain time onwards), it increases without bound. Hence for every $x \in \chi$, for infinitely many $i \geq 0$, $[v_{i}]$ satisfies $[(x = 0) \vee (x > c_{x})]$. We now recall the definition of progressive runs from \cite{1}.
+
+\begin{definition}
+A run $r = (\overline{s}, \overline{\alpha})$ of the region automaton $R(T)$ of the form:
+\[r: (s_{0}, \alpha_{0}) \overset{\sigma_{1}}{\longrightarrow} (s_{1}, \alpha_{1}) \overset{\sigma_{2}}{\longrightarrow} (s_{2}, \alpha_{2}) \overset{\sigma_{3}}{\longrightarrow} \cdots \]
+is progressive iff for every clock $x \in \chi$, there are infinitely many $i \geq 0$ such that $\alpha_{i}$ satisfies $[(x = 0) \vee (x > c_{x})]$
+\end{definition}
+
+Thus, for a run $r$ of $T$ over $(\sigma, \tau)$, $[r]$ is a progressive run of $R(T)$ over $\sigma$.
+
+We now recall the following lemma from \cite{1}.
+
+\begin{lemma}
+If $r$ is a progressive run of $R(T)$ over $\sigma$, then there exists a time sequence $\tau$ and a run $r'$ of $T$ over $(\sigma, \tau)$ such that $r$ equals $[r']$.
+\end{lemma}
+
+Given a timed language $L$, we define the language $Untime(L)$ (as in \cite{1}) as the set of words:
+\[Untime(L) = \lbrace \sigma \; \vert \; (\sigma, \tau) \in L \; \text{for some time sequence} \; \tau \rbrace\]
+
+For a timed automaton $M$, its region automaton can be used to recognize $Untime(L(M))$. We now recall the following theorem from \cite{1}. It is stated for timed B{\"u}chi automata, but it also holds for timed Muller automata.
+
+\begin{theorem}
+Given a timed B{\"u}chi automaton $M = (\Sigma, S, S_{0}, \chi, E, F)$ where $T = (\Sigma, S, S_{0}, \chi, E)$ is a timed transition table and $F \subseteq S$ is a set of accepting states, there exists a B{\"u}chi automaton over $\Sigma$ which accepts $Untime(L(M))$ and the transition table of this B{\"u}chi automaton is $R(T)$.
+\end{theorem}
+
+In this appendix, we have reviewed the basic theory of timed automata from \cite{1} which is required for proper understanding of our work in timed games (discussed in Chapter 3).

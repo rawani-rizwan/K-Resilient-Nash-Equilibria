@@ -1,0 +1,120 @@
+\begin{thebibliography}{16}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Abraham et~al.(2006)Abraham, Dolev, Gonen, and Halpern]{Abraham-2006}
+Ittai Abraham, Danny Dolev, Rica Gonen, and Joe Halpern.
+\newblock Distributed computing meets game theory: robust mechanisms for
+  rational secret sharing and multiparty computation.
+\newblock In \emph{Proceedings of the 25th Annual ACM Symposium on Principles
+  of Distributed Computing (PODC'06)}, pages 53--62. ACM, 2006.
+
+\bibitem[Abraham et~al.(2008)Abraham, Dolev, and Halpern]{Abraham-2008}
+Ittai Abraham, Danny Dolev, and Joseph~Y. Halpern.
+\newblock Lower bounds on implementing robust and resilient mediators.
+\newblock In \emph{Proceedings of the 5th Theory of Cryptography Conference},
+  volume 4948 of \emph{Lecture Notes in Computer Science}, pages 302--319.
+  Springer, 2008.
+
+\bibitem[Alur and Dill(1994)]{1}
+Rajeev Alur and David~L. Dill.
+\newblock A theory of timed automata.
+\newblock \emph{Theoretical Computer Science}, 126\penalty0 (2):\penalty0 183
+  -- 235, 1994.
+
+\bibitem[Aumann(1959)]{Aumann-59}
+Robert~J. Aumann.
+\newblock Acceptable points in general cooperative n-person games.
+\newblock \emph{Contributions to the Theory of Games IV, Annals of Mathematical
+  Studies 40}, pages 287--324, 1959.
+
+\bibitem[Bernheim et~al.(1987)Bernheim, Peleg, and Whinston]{Bernheim-1987}
+B.~Douglas Bernheim, Bezalel Peleg, and Michael~D. Whinston.
+\newblock Coalition-proof {N}ash equilibria i. concepts.
+\newblock \emph{Journal of Economic Theory}, 42\penalty0 (1):\penalty0 1 -- 12,
+  1987.
+
+\bibitem[Bouyer et~al.(2010{\natexlab{a}})Bouyer, Brenguier, and
+  Markey]{BBM-concur10}
+Patricia Bouyer, Romain Brenguier, and Nicolas Markey.
+\newblock {N}ash equilibria for reachability objectives in multi-player timed
+  games.
+\newblock In \emph{Proceedings of the 21st International Conference on
+  Concurrency Theory (CONCUR'10)}, volume 6269 of \emph{Lecture Notes in
+  Computer Science}, pages 192--206. Springer, 2010{\natexlab{a}}.
+
+\bibitem[Bouyer et~al.(2010{\natexlab{b}})Bouyer, Brenguier, and
+  Markey]{BBM-report}
+Patricia Bouyer, Romain Brenguier, and Nicolas Markey.
+\newblock {N}ash equilibria for reachability objectives in multi-player timed
+  games.
+\newblock {R}esearch {R}eport {L}{S}{V}-10-12, {E}{N}{S} {C}achan, {F}rance,
+  2010{\natexlab{b}}.
+
+\bibitem[Bouyer et~al.(2011)Bouyer, Brenguier, Markey, and
+  Ummels]{BBMU-fsttcs11}
+Patricia Bouyer, Romain Brenguier, Nicolas Markey, and Michael Ummels.
+\newblock {N}ash equilibria in concurrent games with {B}{\"u}chi objectives.
+\newblock In \emph{Proceedings of the 31st Conference on Foundations of
+  Software Technology and Theoretical Computer Science (FSTTCS'11)}, volume~13
+  of \emph{Leibniz International Proceedings in Informatics}, pages 375--386.
+  Leibniz-Zentrum f{\"u}r Informatik, 2011.
+
+\bibitem[Brenguier(2012)]{Romain-phd}
+Romain Brenguier.
+\newblock \emph{{N}ash Equilibria in Concurrent Games - {A}pplication to Timed
+  Games}.
+\newblock PhD thesis, Laboratoire Sp{\'e}cification et V{\'e}rification, ENS
+  Cachan, France, 2012.
+
+\bibitem[Chatterjee et~al.(2004)Chatterjee, Majumdar, and Jurdziński]{6}
+Krishnendu Chatterjee, Rupak Majumdar, and Marcin Jurdziński.
+\newblock On {N}ash equilibria in stochastic games.
+\newblock In \emph{Proceedings of the 13th EACSL Annual Conference on Computer
+  Science Logic (CSL'04)}, volume 3210 of \emph{Lecture Notes in Computer
+  Science}, pages 26--40. Springer, 2004.
+
+\bibitem[Gr{\"a}del and Ummels(2008)]{Ummels-2008}
+Erich Gr{\"a}del and Michael Ummels.
+\newblock Solution concepts and algorithms for infinite multiplayer games.
+\newblock In \emph{New Perspectives on Games and Interaction}, volume~4 of
+  \emph{Texts in Logic and Games}, pages 151--178. Amsterdam University Press,
+  2008.
+
+\bibitem[Halpern(2008)]{Halpern-2008}
+Joseph~Y. Halpern.
+\newblock {B}eyond {N}ash equilibrium: {S}olution concepts for the 21st
+  century.
+\newblock In \emph{Proceedings of the 27th ACM Symposium on Principles of
+  Distributed Computing (PODC'08)}, pages 1--10. ACM, 2008.
+
+\bibitem[Halpern(2011)]{Halpern-2011}
+Joseph~Y. Halpern.
+\newblock {B}eyond {N}ash equilibrium: {S}olution concepts for the 21st
+  century.
+\newblock In \emph{Lectures in Game Theory for Computer Scientists}, pages
+  264--289. Cambridge University Press, 2011.
+
+\bibitem[Henzinger(2005)]{9}
+Thomas~A. Henzinger.
+\newblock Games in system design and verification.
+\newblock In \emph{Proceedings of the 10th Conference on Theoretical Aspects of
+  Rationality and Knowledge (TARK'05)}, pages 1--4. National University of
+  Singapore, 2005.
+
+\bibitem[Moreno and Wooders(1996)]{Moreno-1996}
+D.~Moreno and J.~Wooders.
+\newblock Coalition-proof equilibrium.
+\newblock \emph{Games and Economic Behavior}, 17\penalty0 (1):\penalty0
+  80--112, 1996.
+
+\bibitem[Nash(1950)]{12}
+John~F. Nash.
+\newblock Equilibrium points in n-person games.
+\newblock \emph{Proceedings of the National Academy of Sciences of the USA},
+  36\penalty0 (1):\penalty0 48--49, 1950.
+
+\end{thebibliography}

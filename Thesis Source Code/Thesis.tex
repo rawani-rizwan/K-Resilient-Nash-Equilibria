@@ -1,0 +1,128 @@
+\documentclass[12pt,a4paper,oneside]{book}
+
+\usepackage[left=3.5cm,top=2.5cm,right=2.5cm,bottom=2.5cm]{geometry} %margins
+\usepackage{amsthm} % theorem environment
+\usepackage{amsmath} % math
+\usepackage{amssymb} % symbols
+\usepackage{graphics} % for including figures
+\usepackage{graphicx} % for including figures
+\usepackage{setspace} % for doublespacing singlespacing etc.
+\usepackage{datetime} % to write the date in the desired format
+\usepackage[title, titletoc]{appendix}
+\usepackage{subfigure}
+\usepackage[section]{algorithm}
+\usepackage{algorithmic}
+% \usepackage{algorithmicx}
+% \usepackage{algpseudocode}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{framed}
+\usepackage{multirow}
+\usepackage[square, numbers, comma, sort&compress]{natbib}
+\usepackage{hyperref}
+\usepackage{fixltx2e}
+\usepackage{url}
+\usepackage{pdfpages}
+\usepackage[numbers]{natbib}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+
+\graphicspath{{img/}}
+
+\pagestyle{myheadings}
+
+% % % % % % % % % % % % % % % % %
+
+%all this for generating title and certificate
+\newdateformat{monthyear}{\monthname[\THEMONTH], \THEYEAR}
+\def\title{K-Resilient Nash Equilibria in Multi-Player Concurrent Reachability Games}
+\def\author{Mohammed Rizwan Rawani}
+\def\rollno{11111030}
+\def\degree{Master of Technology}
+\def\department{Department of Computer Science and Engineering}
+\def\shortdepartment{CSE}
+\def\institute{Indian Institute of Technology Kanpur}
+\def\shortinstitute{I.I.T. Kanpur}
+\def\longinstitute{Indian Institute of Technology, Kanpur}
+\def\advisor{Prof. Anil Seth}
+\def\advisordepartment{Department of Computer Science and Engineering}
+
+% % % % % % % % % % % % % % % % % 
+
+\hypersetup{
+	bookmarks=true,
+	bookmarksopen=true,
+	bookmarksopenlevel=0,
+	bookmarksnumbered=true,
+	hypertexnames=false,
+	colorlinks=true,
+	linkcolor={black},
+	citecolor={black},
+	urlcolor={black},
+	breaklinks=true,
+	pdfauthor={\author},
+	pdftitle={\title}
+}
+
+
+\begin{document}
+	\frontmatter
+	\thispagestyle{empty}
+	\include{Title}
+	\thispagestyle{empty}
+    %\include{Certificate}
+    \includepdf{Certificate.pdf}
+	%\pagestyle{myheadings} 
+	\pagenumbering{roman} 
+	\pagestyle{plain}
+	\setcounter{page}{3}
+	\addcontentsline{toc}{chapter}{Abstract}
+	
+	\onehalfspace
+	\include{Abstract}
+	\include{Dedication}
+	\addcontentsline{toc}{chapter}{Acknowledgements}
+	\include{Acknowledgements}
+	
+	\doublespacing
+	\setcounter{tocdepth}{1}
+	\tableofcontents
+	
+	\listoftables
+	\addcontentsline{toc}{chapter}{List of Tables}
+	
+	\listoffigures
+	\addcontentsline{toc}{chapter}{List of Figures}
+	
+	\mainmatter
+	\doublespacing
+	\pagenumbering{arabic}
+	\pagestyle{myheadings}
+	
+	\include{Introduction}
+	\input{Untimed}
+    \input{Timed}
+    \input{Conclusion}
+    \appendix
+    \input{TimedAutomata}
+	\backmatter
+	\singlespacing
+	\addcontentsline{toc}{chapter}{Bibliography}
+	%\bibliographystyle{unsrt}
+%   \bibliographystyle{alpha}
+	\bibliographystyle{plainnat}
+	\bibliography{References}
+
+\end{document}

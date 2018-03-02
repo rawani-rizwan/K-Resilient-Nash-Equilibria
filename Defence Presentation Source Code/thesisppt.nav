@@ -1,0 +1,215 @@
+\beamer@endinputifotherversion {3.26pt}
+\headcommand {\slideentry {0}{0}{1}{1/1}{}{0}}
+\headcommand {\beamer@framepages {1}{1}}
+\headcommand {\slideentry {0}{0}{2}{2/2}{}{0}}
+\headcommand {\beamer@framepages {2}{2}}
+\headcommand {\sectionentry {1}{Introduction}{3}{Introduction}{0}}
+\headcommand {\beamer@sectionpages {1}{2}}
+\headcommand {\beamer@subsectionpages {1}{2}}
+\headcommand {\slideentry {1}{0}{3}{3/3}{}{0}}
+\headcommand {\beamer@framepages {3}{3}}
+\headcommand {\slideentry {1}{0}{4}{4/4}{}{0}}
+\headcommand {\beamer@framepages {4}{4}}
+\headcommand {\slideentry {1}{0}{5}{5/5}{}{0}}
+\headcommand {\beamer@framepages {5}{5}}
+\headcommand {\beamer@subsectionentry {0}{1}{1}{6}{Games, Strategies and Equilibria}}\headcommand {\beamer@subsectionpages {3}{5}}
+\headcommand {\slideentry {1}{1}{1}{6/6}{Games, Strategies and Equilibria}{0}}
+\headcommand {\beamer@framepages {6}{6}}
+\headcommand {\slideentry {1}{1}{2}{7/7}{Games, Strategies and Equilibria}{0}}
+\headcommand {\beamer@framepages {7}{7}}
+\headcommand {\slideentry {1}{1}{3}{8/8}{Games, Strategies and Equilibria}{0}}
+\headcommand {\beamer@framepages {8}{8}}
+\headcommand {\slideentry {1}{1}{4}{9/9}{Games, Strategies and Equilibria}{0}}
+\headcommand {\beamer@framepages {9}{9}}
+\headcommand {\slideentry {1}{1}{5}{10/10}{Games, Strategies and Equilibria}{0}}
+\headcommand {\beamer@framepages {10}{10}}
+\headcommand {\slideentry {1}{1}{6}{11/11}{Games, Strategies and Equilibria}{0}}
+\headcommand {\beamer@framepages {11}{11}}
+\headcommand {\beamer@subsectionentry {0}{1}{2}{12}{Our Contribution}}\headcommand {\beamer@subsectionpages {6}{11}}
+\headcommand {\slideentry {1}{2}{1}{12/12}{Our Contribution}{0}}
+\headcommand {\beamer@framepages {12}{12}}
+\headcommand {\beamer@subsectionentry {0}{1}{3}{13}{Motivation}}\headcommand {\beamer@subsectionpages {12}{12}}
+\headcommand {\slideentry {1}{3}{1}{13/13}{Motivation}{0}}
+\headcommand {\beamer@framepages {13}{13}}
+\headcommand {\slideentry {1}{3}{2}{14/14}{Motivation}{0}}
+\headcommand {\beamer@framepages {14}{14}}
+\headcommand {\slideentry {1}{3}{3}{15/15}{Motivation}{0}}
+\headcommand {\beamer@framepages {15}{15}}
+\headcommand {\slideentry {1}{3}{4}{16/16}{Motivation}{0}}
+\headcommand {\beamer@framepages {16}{16}}
+\headcommand {\slideentry {1}{3}{5}{17/17}{Motivation}{0}}
+\headcommand {\beamer@framepages {17}{17}}
+\headcommand {\beamer@subsectionentry {0}{1}{4}{18}{Related Work}}\headcommand {\beamer@subsectionpages {13}{17}}
+\headcommand {\slideentry {1}{4}{1}{18/18}{Related Work}{0}}
+\headcommand {\beamer@framepages {18}{18}}
+\headcommand {\slideentry {1}{4}{2}{19/19}{Related Work}{0}}
+\headcommand {\beamer@framepages {19}{19}}
+\headcommand {\slideentry {1}{4}{3}{20/20}{Related Work}{0}}
+\headcommand {\beamer@framepages {20}{20}}
+\headcommand {\slideentry {1}{4}{4}{21/21}{Related Work}{0}}
+\headcommand {\beamer@framepages {21}{21}}
+\headcommand {\slideentry {1}{4}{5}{22/22}{Related Work}{0}}
+\headcommand {\beamer@framepages {22}{22}}
+\headcommand {\sectionentry {2}{Multi-Player Concurrent Reachability Games}{23}{Multi-Player Concurrent Reachability Games}{0}}
+\headcommand {\beamer@sectionpages {3}{22}}
+\headcommand {\beamer@subsectionpages {18}{22}}
+\headcommand {\slideentry {2}{0}{6}{23/23}{}{0}}
+\headcommand {\beamer@framepages {23}{23}}
+\headcommand {\beamer@subsectionentry {0}{2}{1}{24}{Preliminaries}}\headcommand {\beamer@subsectionpages {23}{23}}
+\headcommand {\slideentry {2}{1}{1}{24/24}{Preliminaries}{0}}
+\headcommand {\beamer@framepages {24}{24}}
+\headcommand {\slideentry {2}{1}{2}{25/25}{Preliminaries}{0}}
+\headcommand {\beamer@framepages {25}{25}}
+\headcommand {\beamer@subsectionentry {0}{2}{2}{26}{Multi-Player Concurrent Reachability Games}}\headcommand {\beamer@subsectionpages {24}{25}}
+\headcommand {\slideentry {2}{2}{1}{26/26}{Multi-Player Concurrent Reachability Games}{0}}
+\headcommand {\beamer@framepages {26}{26}}
+\headcommand {\slideentry {2}{2}{2}{27/27}{Multi-Player Concurrent Reachability Games}{0}}
+\headcommand {\beamer@framepages {27}{27}}
+\headcommand {\slideentry {2}{2}{3}{28/28}{Multi-Player Concurrent Reachability Games}{0}}
+\headcommand {\beamer@framepages {28}{28}}
+\headcommand {\slideentry {2}{2}{4}{29/29}{Multi-Player Concurrent Reachability Games}{0}}
+\headcommand {\beamer@framepages {29}{29}}
+\headcommand {\slideentry {2}{2}{5}{30/30}{Multi-Player Concurrent Reachability Games}{0}}
+\headcommand {\beamer@framepages {30}{30}}
+\headcommand {\slideentry {2}{2}{6}{31/31}{Multi-Player Concurrent Reachability Games}{0}}
+\headcommand {\beamer@framepages {31}{31}}
+\headcommand {\slideentry {2}{2}{7}{32/32}{Multi-Player Concurrent Reachability Games}{0}}
+\headcommand {\beamer@framepages {32}{32}}
+\headcommand {\slideentry {2}{2}{8}{33/33}{Multi-Player Concurrent Reachability Games}{0}}
+\headcommand {\beamer@framepages {33}{33}}
+\headcommand {\slideentry {2}{2}{9}{34/34}{Multi-Player Concurrent Reachability Games}{0}}
+\headcommand {\beamer@framepages {34}{34}}
+\headcommand {\slideentry {2}{2}{10}{35/35}{Multi-Player Concurrent Reachability Games}{0}}
+\headcommand {\beamer@framepages {35}{35}}
+\headcommand {\slideentry {2}{2}{11}{36/36}{Multi-Player Concurrent Reachability Games}{0}}
+\headcommand {\beamer@framepages {36}{36}}
+\headcommand {\beamer@subsectionentry {0}{2}{3}{37}{Characterizing K-Resilient Nash Equilibria}}\headcommand {\beamer@subsectionpages {26}{36}}
+\headcommand {\slideentry {2}{3}{1}{37/37}{Characterizing K-Resilient Nash Equilibria}{0}}
+\headcommand {\beamer@framepages {37}{37}}
+\headcommand {\slideentry {2}{3}{2}{38/38}{Characterizing K-Resilient Nash Equilibria}{0}}
+\headcommand {\beamer@framepages {38}{38}}
+\headcommand {\slideentry {2}{3}{3}{39/39}{Characterizing K-Resilient Nash Equilibria}{0}}
+\headcommand {\beamer@framepages {39}{39}}
+\headcommand {\slideentry {2}{3}{4}{40/40}{Characterizing K-Resilient Nash Equilibria}{0}}
+\headcommand {\beamer@framepages {40}{40}}
+\headcommand {\slideentry {2}{3}{5}{41/41}{Characterizing K-Resilient Nash Equilibria}{0}}
+\headcommand {\beamer@framepages {41}{41}}
+\headcommand {\slideentry {2}{3}{6}{42/42}{Characterizing K-Resilient Nash Equilibria}{0}}
+\headcommand {\beamer@framepages {42}{42}}
+\headcommand {\slideentry {2}{3}{7}{43/43}{Characterizing K-Resilient Nash Equilibria}{0}}
+\headcommand {\beamer@framepages {43}{43}}
+\headcommand {\slideentry {2}{3}{8}{44/44}{Characterizing K-Resilient Nash Equilibria}{0}}
+\headcommand {\beamer@framepages {44}{44}}
+\headcommand {\slideentry {2}{3}{9}{45/45}{Characterizing K-Resilient Nash Equilibria}{0}}
+\headcommand {\beamer@framepages {45}{45}}
+\headcommand {\slideentry {2}{3}{10}{46/46}{Characterizing K-Resilient Nash Equilibria}{0}}
+\headcommand {\beamer@framepages {46}{46}}
+\headcommand {\slideentry {2}{3}{11}{47/47}{Characterizing K-Resilient Nash Equilibria}{0}}
+\headcommand {\beamer@framepages {47}{47}}
+\headcommand {\slideentry {2}{3}{12}{48/48}{Characterizing K-Resilient Nash Equilibria}{0}}
+\headcommand {\beamer@framepages {48}{48}}
+\headcommand {\slideentry {2}{3}{13}{49/49}{Characterizing K-Resilient Nash Equilibria}{0}}
+\headcommand {\beamer@framepages {49}{49}}
+\headcommand {\slideentry {2}{3}{14}{50/50}{Characterizing K-Resilient Nash Equilibria}{0}}
+\headcommand {\beamer@framepages {50}{50}}
+\headcommand {\slideentry {2}{3}{15}{51/51}{Characterizing K-Resilient Nash Equilibria}{0}}
+\headcommand {\beamer@framepages {51}{51}}
+\headcommand {\slideentry {2}{3}{16}{52/52}{Characterizing K-Resilient Nash Equilibria}{0}}
+\headcommand {\beamer@framepages {52}{52}}
+\headcommand {\slideentry {2}{3}{17}{53/53}{Characterizing K-Resilient Nash Equilibria}{0}}
+\headcommand {\beamer@framepages {53}{53}}
+\headcommand {\slideentry {2}{3}{18}{54/54}{Characterizing K-Resilient Nash Equilibria}{0}}
+\headcommand {\beamer@framepages {54}{54}}
+\headcommand {\slideentry {2}{3}{19}{55/55}{Characterizing K-Resilient Nash Equilibria}{0}}
+\headcommand {\beamer@framepages {55}{55}}
+\headcommand {\beamer@subsectionentry {0}{2}{4}{56}{Application to Finite Games}}\headcommand {\beamer@subsectionpages {37}{55}}
+\headcommand {\slideentry {2}{4}{1}{56/56}{Application to Finite Games}{0}}
+\headcommand {\beamer@framepages {56}{56}}
+\headcommand {\slideentry {2}{4}{2}{57/57}{Application to Finite Games}{0}}
+\headcommand {\beamer@framepages {57}{57}}
+\headcommand {\slideentry {2}{4}{3}{58/58}{Application to Finite Games}{0}}
+\headcommand {\beamer@framepages {58}{58}}
+\headcommand {\sectionentry {3}{Timed Concurrent Reachability Games}{59}{Timed Concurrent Reachability Games}{0}}
+\headcommand {\beamer@sectionpages {23}{58}}
+\headcommand {\beamer@subsectionpages {56}{58}}
+\headcommand {\slideentry {3}{0}{4}{59/59}{}{0}}
+\headcommand {\beamer@framepages {59}{59}}
+\headcommand {\beamer@subsectionentry {0}{3}{1}{60}{Timed Games}}\headcommand {\beamer@subsectionpages {59}{59}}
+\headcommand {\slideentry {3}{1}{1}{60/60}{Timed Games}{0}}
+\headcommand {\beamer@framepages {60}{60}}
+\headcommand {\slideentry {3}{1}{2}{61/61}{Timed Games}{0}}
+\headcommand {\beamer@framepages {61}{61}}
+\headcommand {\slideentry {3}{1}{3}{62/62}{Timed Games}{0}}
+\headcommand {\beamer@framepages {62}{62}}
+\headcommand {\slideentry {3}{1}{4}{63/63}{Timed Games}{0}}
+\headcommand {\beamer@framepages {63}{63}}
+\headcommand {\slideentry {3}{1}{5}{64/64}{Timed Games}{0}}
+\headcommand {\beamer@framepages {64}{64}}
+\headcommand {\slideentry {3}{1}{6}{65/65}{Timed Games}{0}}
+\headcommand {\beamer@framepages {65}{65}}
+\headcommand {\slideentry {3}{1}{7}{66/66}{Timed Games}{0}}
+\headcommand {\beamer@framepages {66}{66}}
+\headcommand {\slideentry {3}{1}{8}{67/67}{Timed Games}{0}}
+\headcommand {\beamer@framepages {67}{67}}
+\headcommand {\slideentry {3}{1}{9}{68/68}{Timed Games}{0}}
+\headcommand {\beamer@framepages {68}{68}}
+\headcommand {\slideentry {3}{1}{10}{69/69}{Timed Games}{0}}
+\headcommand {\beamer@framepages {69}{69}}
+\headcommand {\beamer@subsectionentry {0}{3}{2}{70}{Semantics of Timed Games}}\headcommand {\beamer@subsectionpages {60}{69}}
+\headcommand {\slideentry {3}{2}{1}{70/70}{Semantics of Timed Games}{0}}
+\headcommand {\beamer@framepages {70}{70}}
+\headcommand {\slideentry {3}{2}{2}{71/71}{Semantics of Timed Games}{0}}
+\headcommand {\beamer@framepages {71}{71}}
+\headcommand {\slideentry {3}{2}{3}{72/72}{Semantics of Timed Games}{0}}
+\headcommand {\beamer@framepages {72}{72}}
+\headcommand {\slideentry {3}{2}{4}{73/73}{Semantics of Timed Games}{0}}
+\headcommand {\beamer@framepages {73}{73}}
+\headcommand {\beamer@subsectionentry {0}{3}{3}{74}{Region Games}}\headcommand {\beamer@subsectionpages {70}{73}}
+\headcommand {\slideentry {3}{3}{1}{74/74}{Region Games}{0}}
+\headcommand {\beamer@framepages {74}{74}}
+\headcommand {\slideentry {3}{3}{2}{75/75}{Region Games}{0}}
+\headcommand {\beamer@framepages {75}{75}}
+\headcommand {\slideentry {3}{3}{3}{76/76}{Region Games}{0}}
+\headcommand {\beamer@framepages {76}{76}}
+\headcommand {\beamer@subsectionentry {0}{3}{4}{77}{K-Resilient Nash Equilibria in Timed Games}}\headcommand {\beamer@subsectionpages {74}{76}}
+\headcommand {\slideentry {3}{4}{1}{77/77}{K-Resilient Nash Equilibria in Timed Games}{0}}
+\headcommand {\beamer@framepages {77}{77}}
+\headcommand {\slideentry {3}{4}{2}{78/78}{K-Resilient Nash Equilibria in Timed Games}{0}}
+\headcommand {\beamer@framepages {78}{78}}
+\headcommand {\slideentry {3}{4}{3}{79/79}{K-Resilient Nash Equilibria in Timed Games}{0}}
+\headcommand {\beamer@framepages {79}{79}}
+\headcommand {\slideentry {3}{4}{4}{80/80}{K-Resilient Nash Equilibria in Timed Games}{0}}
+\headcommand {\beamer@framepages {80}{80}}
+\headcommand {\slideentry {3}{4}{5}{81/81}{K-Resilient Nash Equilibria in Timed Games}{0}}
+\headcommand {\beamer@framepages {81}{81}}
+\headcommand {\slideentry {3}{4}{6}{82/82}{K-Resilient Nash Equilibria in Timed Games}{0}}
+\headcommand {\beamer@framepages {82}{82}}
+\headcommand {\slideentry {3}{4}{7}{83/83}{K-Resilient Nash Equilibria in Timed Games}{0}}
+\headcommand {\beamer@framepages {83}{83}}
+\headcommand {\sectionentry {4}{Conclusion}{84}{Conclusion}{0}}
+\headcommand {\beamer@sectionpages {59}{83}}
+\headcommand {\beamer@subsectionpages {77}{83}}
+\headcommand {\slideentry {4}{0}{8}{84/84}{}{0}}
+\headcommand {\beamer@framepages {84}{84}}
+\headcommand {\slideentry {4}{0}{9}{85/85}{}{0}}
+\headcommand {\beamer@framepages {85}{85}}
+\headcommand {\sectionentry {5}{Future Work}{86}{Future work}{0}}
+\headcommand {\beamer@sectionpages {84}{85}}
+\headcommand {\beamer@subsectionpages {84}{85}}
+\headcommand {\slideentry {5}{0}{10}{86/86}{}{0}}
+\headcommand {\beamer@framepages {86}{86}}
+\headcommand {\slideentry {5}{0}{11}{87/87}{}{0}}
+\headcommand {\beamer@framepages {87}{87}}
+\headcommand {\slideentry {5}{0}{12}{88/88}{}{0}}
+\headcommand {\beamer@framepages {88}{88}}
+\headcommand {\slideentry {5}{0}{12}{88/89}{}{0}}
+\headcommand {\beamer@framepages {88}{89}}
+\headcommand {\slideentry {5}{0}{12}{88/90}{}{0}}
+\headcommand {\beamer@framepages {88}{90}}
+\headcommand {\slideentry {5}{0}{13}{91/91}{}{0}}
+\headcommand {\beamer@framepages {91}{91}}
+\headcommand {\beamer@partpages {1}{91}}
+\headcommand {\beamer@subsectionpages {86}{91}}
+\headcommand {\beamer@sectionpages {86}{91}}
+\headcommand {\beamer@documentpages {91}}
+\headcommand {\def \inserttotalframenumber {91}}
